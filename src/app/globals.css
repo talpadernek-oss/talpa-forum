@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@layer components {
+  .field-label {
+    @apply mb-1.5 block text-sm font-semibold text-forum-navy;
+  }
+  .field-input {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-[15px] text-forum-ink outline-none transition placeholder:text-slate-400 focus:border-forum-blue focus:ring-4 focus:ring-forum-blue/15;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-forum-sunset px-5 py-3 font-bold text-forum-ink shadow-lg shadow-forum-sunset/20 transition hover:bg-[#f7ab55] focus:outline-none focus-visible:ring-4 focus-visible:ring-forum-sunset/40 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-navy {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-forum-navy px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-forum-deep focus:outline-none focus-visible:ring-4 focus-visible:ring-forum-blue/30 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-forum-navy transition hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-forum-blue/20 disabled:opacity-60;
+  }
+  .dot-grid {
+    background-image: radial-gradient(rgba(79, 143, 230, 0.35) 1px, transparent 1px);
+    background-size: 14px 14px;
+  }
+}
