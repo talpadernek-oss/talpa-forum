@@ -33,7 +33,17 @@ const config = () => ({
   nameFields: csv(env('ODOO_NAME_FIELDS', 'name')),
   emailFields: csv(env('ODOO_EMAIL_FIELDS', 'email')),
   phoneFields: csv(env('ODOO_PHONE_FIELDS', 'mobile,phone')),
-  orgFields: csv(env('ODOO_ORGANIZATION_FIELDS', ''))
+  orgFields: csv(env('ODOO_ORGANIZATION_FIELDS', '')),
+  // Contact details kept in their own model (one row per e-mail / phone, linked to the member).
+  email: linked('EMAIL'),
+  phone: linked('PHONE')
+});
+
+/** ODOO_PHONE_MODEL / ODOO_PHONE_LINK_FIELD / ODOO_PHONE_ORDER (same for EMAIL). */
+const linked = (kind: 'EMAIL' | 'PHONE') => ({
+  model: env(`ODOO_${kind}_MODEL`),
+  linkField: env(`ODOO_${kind}_LINK_FIELD`),
+  order: env(`ODOO_${kind}_ORDER`, 'id')
 });
 
 export const odooConfigured = () => {
@@ -74,9 +84,60 @@ const titleCase = (name: string) =>
     .map(w => w.split('-').map(p => p.charAt(0).toLocaleUpperCase('tr-TR') + p.slice(1).toLocaleLowerCase('tr-TR')).join('-'))
     .join(' ');
 
+type FieldInfo = Record<string, { type: string; relation?: string }>;
+type Session = { url: string; db: string; uid: number; apiKey: string };
+
+const call = <T>(s: Session, model: string, method: string, args: unknown[], kwargs: Record<string, unknown> = {}) =>
+  rpc<T>(s.url, 'object', 'execute_kw', [s.db, s.uid, s.apiKey, model, method, args, kwargs]);
+
+const fieldsOf = (s: Session, model: string) => call<FieldInfo>(s, model, 'fields_get', [], { attributes: ['type', 'relation'] });
+
+/** Drops configured fields the model doesn't have, so one wrong name doesn't break the lookup. */
+function keepExisting(fields: string[], info: FieldInfo, model: string) {
+  const missing = fields.filter(f => !info[f]);
+  if (missing.length) console.warn(`Odoo: ${model} has no field(s) ${missing.join(', ')}; check ODOO_*_FIELDS`);
+  return fields.filter(f => info[f]);
+}
+
+/** First value of `fields` on the linked contact model, e.g. the member's phone row. */
+async function readLinked(
+  s: Session,
+  memberModel: string,
+  memberId: number,
+  link: { model: string; linkField: string; order: string },
+  fields: string[]
+): Promise<string> {
+  if (!link.model) return '';
+  try {
+    const info = await fieldsOf(s, link.model);
+    const linkField =
+      link.linkField || Object.keys(info).find(f => info[f].type === 'many2one' && info[f].relation === memberModel);
+    if (!linkField) {
+      console.error(`Odoo: no many2one to ${memberModel} on ${link.model}; set ODOO_*_LINK_FIELD`);
+      return '';
+    }
+    const read = keepExisting(fields, info, link.model);
+    if (!read.length) return '';
+    const rows = await call<Record<string, unknown>[]>(s, link.model, 'search_read', [[[linkField, '=', memberId]]], {
+      fields: read,
+      order: link.order,
+      limit: 1
+    });
+    return rows[0] ? first(rows[0], read) : '';
+  } catch (e) {
+    // Contact details are optional: the member can still type them in.
+    console.error(`Odoo: reading ${link.model} failed`, e);
+    return '';
+  }
+}
+
 export async function findMemberByTc(tc: string): Promise<MemberLookup> {
   const c = config();
-  if (!odooConfigured()) return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+  if (!odooConfigured()) {
+    const missing = ['ODOO_URL', 'ODOO_DB', 'ODOO_USERNAME', 'ODOO_API_KEY'].filter(k => !env(k));
+    console.error('Odoo is not configured; missing', missing.join(', '));
+    return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+  }
 
   let extraDomain: unknown[];
   try {
@@ -94,26 +155,35 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
       return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
     }
 
-    const fields = Array.from(new Set([...c.nameFields, ...c.emailFields, ...c.phoneFields, ...c.orgFields]));
-    const rows = await rpc<Record<string, unknown>[]>(c.url, 'object', 'execute_kw', [
-      c.db,
-      uid,
-      c.apiKey,
-      c.model,
-      'search_read',
-      [[[c.tcField, '=', tc.trim()], ...extraDomain]],
-      { fields, limit: 1 }
-    ]);
+    const s: Session = { url: c.url, db: c.db, uid, apiKey: c.apiKey };
+    const info = await fieldsOf(s, c.model);
+    if (!info[c.tcField]) {
+      console.error(`Odoo: ${c.model} has no field ${c.tcField}; check ODOO_TC_FIELD`);
+      return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+    }
+    // E-mail / phone fields belong to the linked model when one is configured.
+    const ownFields = [...c.nameFields, ...c.orgFields, ...(c.email.model ? [] : c.emailFields), ...(c.phone.model ? [] : c.phoneFields)];
+    const fields = keepExisting(Array.from(new Set(ownFields)), info, c.model);
+
+    const rows = await call<Record<string, unknown>[]>(s, c.model, 'search_read', [[[c.tcField, '=', tc.trim()], ...extraDomain]], {
+      fields,
+      limit: 1
+    });
 
     const row = rows[0];
     if (!row) return { kind: 'not_member' };
+    const id = Number(row.id);
+    const [email, phone] = await Promise.all([
+      c.email.model ? readLinked(s, c.model, id, c.email, c.emailFields) : first(row, c.emailFields),
+      c.phone.model ? readLinked(s, c.model, id, c.phone, c.phoneFields) : first(row, c.phoneFields)
+    ]);
     return {
       kind: 'member',
       member: {
-        partnerId: Number(row.id),
+        partnerId: id,
         fullName: titleCase(first(row, c.nameFields)),
-        email: first(row, c.emailFields).toLowerCase(),
-        phone: first(row, c.phoneFields),
+        email: email.toLowerCase(),
+        phone,
         organization: first(row, c.orgFields)
       }
     };
