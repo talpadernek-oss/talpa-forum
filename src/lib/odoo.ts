@@ -195,19 +195,31 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
 
 /* ---------- Masking: the verify endpoint is public and a TC number is not a secret ---------- */
 
+const stars = (n: number) => '*'.repeat(Math.max(n, 0));
+
+/** "burhanfatihmermer@gmail.com" -> "bu*************er@gmail.com" */
 export const maskEmail = (email: string) => {
-  const [local, domain] = email.split('@');
-  if (!domain) return '';
-  return `${local.slice(0, Math.min(2, local.length - 1))}***@${domain}`;
+  const at = email.lastIndexOf('@');
+  if (at < 1) return '';
+  const local = Array.from(email.slice(0, at));
+  const domain = email.slice(at);
+  // Too short to show both ends without revealing the whole name.
+  if (local.length <= 4) return local[0] + stars(local.length - 1) + domain;
+  return local.slice(0, 2).join('') + stars(local.length - 4) + local.slice(-2).join('') + domain;
 };
 
+/** "+905321232676" -> "******26 76" */
 export const maskPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, '');
-  return digits.length < 4 ? '' : `*** *** ** ${digits.slice(-2)}`;
+  return digits.length < 4 ? '' : `******${digits.slice(-4, -2)} ${digits.slice(-2)}`;
 };
 
-/** "Ahmet Can Yılmaz" -> "Ahmet Can Y." */
-export const maskName = (name: string) => {
-  const parts = name.split(' ');
-  return parts.length < 2 ? name : `${parts.slice(0, -1).join(' ')} ${parts[parts.length - 1].charAt(0)}.`;
-};
+/** "Burhan Fatih Mermer" -> "Bu**** Fa*** Me****" */
+export const maskName = (name: string) =>
+  name
+    .split(' ')
+    .map(word => {
+      const chars = Array.from(word);
+      return chars.slice(0, 2).join('') + stars(chars.length - 2);
+    })
+    .join(' ');
