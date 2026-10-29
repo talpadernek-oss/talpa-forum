@@ -59,6 +59,9 @@ export interface Registration {
   role: RoleValue;
   notes: string;
   checkedIn: boolean;
+  /** Verified by T.C. Kimlik No against Odoo at registration. */
+  talpaMember?: boolean;
+  odooPartnerId?: number;
   source: 'form' | 'manual';
   createdAt: string;
   updatedAt: string;

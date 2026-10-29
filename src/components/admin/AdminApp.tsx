@@ -194,6 +194,11 @@ export default function AdminApp() {
                   <tr key={r.id} className="align-top hover:bg-slate-50/70">
                     <td className="px-4 py-3">
                       <p className="font-semibold text-forum-navy">{r.fullName}</p>
+                      {r.talpaMember && (
+                        <span className="mt-1 inline-block rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-sky-800 ring-1 ring-sky-200">
+                          TALPA Üyesi
+                        </span>
+                      )}
                       {r.notes && <p className="mt-0.5 max-w-[220px] truncate text-xs text-slate-500" title={r.notes}>{r.notes}</p>}
                     </td>
                     <td className="px-4 py-3">
@@ -449,7 +454,7 @@ function EditDialog({ initial, onClose, onSaved, onUnauthorized }: {
 function exportCsv(rows: Registration[]) {
   // Semicolon + BOM so Excel (Turkish locale) opens it with columns and correct characters.
   const esc = (v: string) => `"${(v ?? '').replace(/"/g, '""')}"`;
-  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Kayıt Tarihi'];
+  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Kayıt Tarihi'];
   const lines = rows.map(r =>
     [
       r.fullName,
@@ -457,6 +462,7 @@ function exportCsv(rows: Registration[]) {
       r.phone,
       r.jobTitle,
       r.organization,
+      r.talpaMember ? 'Evet' : 'Hayır',
       roleLabel(r.role),
       r.days.includes('1') ? 'Evet' : 'Hayır',
       r.days.includes('2') ? 'Evet' : 'Hayır',

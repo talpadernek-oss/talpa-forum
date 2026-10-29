@@ -37,7 +37,10 @@ export async function listRegistrations(): Promise<Registration[]> {
 export const getRegistration = (id: string) =>
   /^[a-z0-9-]{8,40}$/.test(id) ? readJson<Registration>(regKey(id)) : Promise.resolve(null);
 
-export async function createRegistration(fields: RegistrationFields, source: Registration['source']) {
+export async function createRegistration(
+  fields: RegistrationFields & Pick<Registration, 'talpaMember' | 'odooPartnerId'>,
+  source: Registration['source']
+) {
   const existing = await findIdByEmail(fields.email);
   if (existing) throw new DuplicateEmailError(existing);
 
