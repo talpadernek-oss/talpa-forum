@@ -1,6 +1,6 @@
 # 2. TALPA Uçuş Emniyet Forumu – Tanıtım ve Kayıt Sitesi
 
-1–2 Aralık 2026 tarihlerinde SHGM Türk Sivil Havacılık Akademisi'nde (İstanbul) düzenlenecek **2. TALPA Uçuş Emniyet Forumu ve TALPA-MDA Sempozyumu** için tanıtım sayfası, katılım formu ve kayıt yönetim paneli (Next.js 14).
+1–2 Aralık 2026 tarihlerinde SHGM Türk Sivil Havacılık Akademisi'nde (İstanbul) düzenlenecek **2. TALPA Uçuş Emniyet Forumu ve TALPA-MDA Oturumu** için tanıtım sayfası, katılım formu ve kayıt yönetim paneli (Next.js 14).
 
 | Adres | Kim kullanır | Giriş |
 |---|---|---|

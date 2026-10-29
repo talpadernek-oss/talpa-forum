@@ -3,7 +3,7 @@
 export const EVENT = {
   edition: '2. TALPA',
   title: 'Uçuş Emniyet Forumu',
-  subtitle: 've TALPA-MDA Sempozyumu',
+  subtitle: 've TALPA-MDA Oturumu',
   dateLabel: '1–2 Aralık 2026',
   startTime: '09.00',
   venue: 'SHGM Türk Sivil Havacılık Akademisi',

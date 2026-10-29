@@ -9,7 +9,7 @@ const montserrat = Montserrat({
 });
 
 const description =
-  'TALPA 2. Uçuş Emniyet Forumu ve TALPA-MDA Sempozyumu · 1–2 Aralık 2026 · SHGM Türk Sivil Havacılık Akademisi, İstanbul. Pozitif emniyet kültürü, ruh sağlığı ve akran desteği, GNSS/TCAS spoofing & jamming, FTL ve FRMS.';
+  'TALPA 2. Uçuş Emniyet Forumu ve TALPA-MDA Oturumu · 1–2 Aralık 2026 · SHGM Türk Sivil Havacılık Akademisi, İstanbul. Pozitif emniyet kültürü, ruh sağlığı ve akran desteği, GNSS/TCAS spoofing & jamming, FTL ve FRMS.';
 
 const siteUrl =
   process.env.APP_URL ||
