@@ -16,21 +16,6 @@ import {
 import RegistrationForm from '@/components/RegistrationForm';
 import { EVENT } from '@/lib/constants';
 
-const MDA_TOPICS = [
-  ['Havacılıkta Ruh Sağlığı ve Uçuş Emniyeti', 'Flight Safety Foundation yaklaşımı.'],
-  ['Pilot Ruh Sağlığı ve Esenliği', 'European Cockpit Association (ECA) perspektifi.'],
-  [
-    'İş Yükü, Stres ve Operasyonel Riskler',
-    'Uzun ve kısa menzilli uçuşlar, iş jeti ve charter operasyonları ile uçuş eğitiminde karşılaşılan psikososyal riskler.'
-  ],
-  ['Pilot Akran Destek Programı', 'Anonimleştirilmiş gerçek başvurulardan elde edilen deneyimler ve öğrenilen dersler.'],
-  [
-    'Akran Destek Gönüllülerinin Yetkinlikleri',
-    'Güven, empati, gizlilik, etik sorumluluk ve profesyonel desteğe yönlendirme.'
-  ],
-  ['Farkındalıktan Kültüre', 'Sürdürülebilir akran destek sistemleri ve kurumsal iş birliği.']
-];
-
 const UNITS = [
   'Uçuş İşletme',
   'Uçuş Emniyeti',
@@ -177,7 +162,7 @@ export default function Home() {
                 <p>
                   TALPA – Türkiye Havayolu Pilotları Derneği olarak, uçuş emniyetine ilişkin güncel gelişmelerin, sektörel
                   risklerin ve çözüm önerilerinin ulusal ve uluslararası uzmanların katılımıyla ele alınacağı{' '}
-                  <strong className="text-forum-navy">TALPA 2. Uçuş Emniyet Forumu ve TALPA-MDA Sempozyumu</strong>’na
+                  <strong className="text-forum-navy">TALPA 2. Uçuş Emniyet Forumu ve TALPA-MDA Oturumu</strong>’na
                   sizleri davet etmekten onur duyarız.
                 </p>
                 <p>
@@ -238,19 +223,15 @@ export default function Home() {
                     title="Havacılıkta Ruh Sağlığı, Esenlik ve Uçuş Emniyeti: Farkındalıktan Akran Desteğine"
                   >
                     <p>
-                      Havacılık çalışanlarının ruh sağlığını ve psikolojik esenliğini uçuş emniyetinin ayrılmaz bir parçası
-                      olarak ele alan sempozyumda şu başlıklar değerlendirilecektir:
+                      Havacılık çalışanlarının ruh sağlığı ve psikolojik esenliğinin uçuş emniyetindeki öneminin ele
+                      alınacağı oturumda; Flight Safety Foundation ve European Cockpit Association (ECA) yaklaşımları, farklı
+                      uçuş operasyonlarında karşılaşılan iş yükü, stres ve psikososyal riskler değerlendirilecektir.
                     </p>
-                    <ul className="space-y-2.5 pt-1">
-                      {MDA_TOPICS.map(([t, d]) => (
-                        <li key={t} className="flex gap-3">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-forum-sunset" />
-                          <span>
-                            <strong className="font-semibold text-forum-navy">{t}:</strong> {d}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p>
+                      Ayrıca, TALPA-MDA Akran Destek Programı kapsamında edinilen deneyimler, akran destek gönüllülerinin
+                      yetkinlikleri, güven, gizlilik ve etik ilkeler ile sürdürülebilir bir destek kültürünün geliştirilmesine
+                      yönelik kurumsal iş birliği ele alınacaktır.
+                    </p>
                   </SessionCard>
                 </div>
               </div>
@@ -295,11 +276,17 @@ export default function Home() {
                 <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">
                   Kurumunuzun ilgili tüm birimlerini bekliyoruz
                 </h2>
-                <p className="mt-5 text-[17px] leading-relaxed text-slate-600">
-                  Bilgi ve deneyimlerin paylaşılacağı, sektörümüzün geleceğine yönelik ortak çözüm önerilerinin
-                  geliştirileceği bu buluşmada; kurumunuzun aşağıdaki birimlerinden temsilcilerin katılımını özellikle
-                  önemsiyoruz.
-                </p>
+                <div className="mt-5 space-y-4 text-[17px] leading-relaxed text-slate-600">
+                  <p>
+                    Bu anlayış doğrultusunda, kurumunuzun uçuş işletme, uçuş emniyeti, insan kaynakları, eğitim, ekip
+                    planlama, kalite, risk yönetimi ve ilgili diğer birimlerinden temsilcilerin forumumuza katılımını
+                    özellikle önemsiyoruz.
+                  </p>
+                  <p>
+                    Bilgi ve deneyimlerin paylaşılacağı, sektörümüzün geleceğine yönelik ortak çözüm önerilerinin
+                    geliştirileceği bu önemli buluşmada sizleri aramızda görmekten memnuniyet duyacağız.
+                  </p>
+                </div>
               </div>
               <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {UNITS.map(u => (
