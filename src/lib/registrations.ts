@@ -6,18 +6,35 @@ import type { RegistrationFields } from './validation';
 
 /**
  * One JSON document per registration (`registrations/<id>.json`) plus an
- * e-mail index (`email-index/<hash>.json`) so duplicate checks don't have to
+ * e-mail index (`email-index/<hash>.json`) and a TALPA member index
+ * (`member-index/<odoo partner id>.json`) so duplicate checks don't have to
  * read every registration.
  */
 
 const regKey = (id: string) => `registrations/${id}.json`;
 const emailKey = (email: string) =>
   `email-index/${crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex').slice(0, 40)}.json`;
+const memberKey = (partnerId: number) => `member-index/${partnerId}.json`;
 
 export class DuplicateEmailError extends Error {
   constructor(public existingId: string) {
     super('Bu e-posta adresiyle daha önce kayıt yapılmış.');
   }
+}
+
+/** The same TALPA member registering again with a different e-mail. */
+export class DuplicateMemberError extends Error {
+  constructor(public existingId: string) {
+    super('Bu TALPA üyeliğiyle daha önce kayıt yapılmış.');
+  }
+}
+
+async function findIdByMember(partnerId: number | undefined): Promise<string | null> {
+  if (!partnerId) return null;
+  const entry = await readJson<{ id: string }>(memberKey(partnerId));
+  if (!entry) return null;
+  const reg = await readJson<Registration>(regKey(entry.id));
+  return reg && reg.odooPartnerId === partnerId ? entry.id : null;
 }
 
 async function findIdByEmail(email: string): Promise<string | null> {
@@ -43,11 +60,14 @@ export async function createRegistration(
 ) {
   const existing = await findIdByEmail(fields.email);
   if (existing) throw new DuplicateEmailError(existing);
+  const sameMember = await findIdByMember(fields.odooPartnerId);
+  if (sameMember) throw new DuplicateMemberError(sameMember);
 
   const now = new Date().toISOString();
   const reg: Registration = { id: crypto.randomUUID(), ...fields, source, createdAt: now, updatedAt: now };
   await writeJson(regKey(reg.id), reg);
   if (reg.email) await writeJson(emailKey(reg.email), { id: reg.id });
+  if (reg.odooPartnerId) await writeJson(memberKey(reg.odooPartnerId), { id: reg.id });
   return reg;
 }
 
@@ -75,5 +95,6 @@ export async function deleteRegistration(id: string) {
   if (!current) return false;
   await deleteKey(regKey(id));
   if (current.email) await deleteKey(emailKey(current.email));
+  if (current.odooPartnerId) await deleteKey(memberKey(current.odooPartnerId));
   return true;
 }

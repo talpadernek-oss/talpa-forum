@@ -453,24 +453,29 @@ function EditDialog({ initial, onClose, onSaved, onUnauthorized }: {
 
 function exportCsv(rows: Registration[]) {
   // Semicolon + BOM so Excel (Turkish locale) opens it with columns and correct characters.
-  const esc = (v: string) => `"${(v ?? '').replace(/"/g, '""')}"`;
+  // Public form input starting with = + - @ would run as an Excel formula; a leading ' keeps it text.
+  const esc = (v: string) => `"${(v ?? '').replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
+  // ="0532…" keeps the leading 0 / + that Excel would otherwise drop (phones are digits and + only).
+  const phone = (v: string) => (v ? `="${v}"` : '""');
   const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Kayıt Tarihi'];
   const lines = rows.map(r =>
     [
-      r.fullName,
-      r.email,
-      r.phone,
-      r.jobTitle,
-      r.organization,
-      r.talpaMember ? 'Evet' : 'Hayır',
-      roleLabel(r.role),
-      r.days.includes('1') ? 'Evet' : 'Hayır',
-      r.days.includes('2') ? 'Evet' : 'Hayır',
-      r.checkedIn ? 'Evet' : 'Hayır',
-      r.notes,
-      r.source === 'manual' ? 'Manuel' : 'Web formu',
-      fmtDate(r.createdAt)
-    ].map(esc).join(';')
+      esc(r.fullName),
+      esc(r.email),
+      phone(r.phone),
+      ...[
+        r.jobTitle,
+        r.organization,
+        r.talpaMember ? 'Evet' : 'Hayır',
+        roleLabel(r.role),
+        r.days.includes('1') ? 'Evet' : 'Hayır',
+        r.days.includes('2') ? 'Evet' : 'Hayır',
+        r.checkedIn ? 'Evet' : 'Hayır',
+        r.notes,
+        r.source === 'manual' ? 'Manuel' : 'Web formu',
+        fmtDate(r.createdAt)
+      ].map(esc)
+    ].join(';')
   );
   const blob = new Blob(['﻿' + [header.map(esc).join(';'), ...lines].join('\r\n')], { type: 'text/csv;charset=utf-8' });
   const a = document.createElement('a');

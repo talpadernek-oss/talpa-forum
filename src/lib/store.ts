@@ -5,18 +5,22 @@ import { put, get, list, del } from '@vercel/blob';
 
 /**
  * Key/value + file storage.
- * - On Vercel (BLOB_READ_WRITE_TOKEN set): private Vercel Blob store.
+ * - On Vercel: private Vercel Blob store. Newer store connections authenticate
+ *   with OIDC and only set BLOB_STORE_ID; older ones set BLOB_READ_WRITE_TOKEN.
  * - Locally: files under ./data/store (git-ignored).
  * Every key lives under the `forum/` prefix so the store can be shared.
  */
 
-export const BLOB_ENABLED = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+export const BLOB_ENABLED = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 const PREFIX = 'forum/';
 const LOCAL_ROOT = path.join(process.cwd(), 'data', 'store');
 
 const fullKey = (key: string) => `${PREFIX}${key.replace(/^\/+/, '')}`;
 
 function localPath(key: string): string {
+  // Vercel's filesystem is read-only, so the local fallback can only hide a missing store there.
+  if (process.env.VERCEL)
+    throw new Error('Blob deposu bağlı değil: BLOB_READ_WRITE_TOKEN veya BLOB_STORE_ID tanımlı değil (önek kullanılmamalı).');
   const p = path.join(LOCAL_ROOT, fullKey(key));
   if (!p.startsWith(LOCAL_ROOT)) throw new Error('Geçersiz anahtar.');
   return p;

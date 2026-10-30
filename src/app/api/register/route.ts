@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server';
 import { ok, fail, readBody } from '@/lib/http';
 import { validateRegistration } from '@/lib/validation';
-import { createRegistration, DuplicateEmailError } from '@/lib/registrations';
+import { createRegistration, DuplicateEmailError, DuplicateMemberError } from '@/lib/registrations';
 import { isValidTCKN } from '@/lib/tckn';
 import { findMemberByTc } from '@/lib/odoo';
+import { rateLimited } from '@/lib/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
   // TALPA members: name comes from Odoo; e-mail / phone left empty mean "use the Odoo value".
   let memberPartnerId: number | undefined;
   if (body?.tcNo) {
+    if (rateLimited('member-lookup', req)) return fail('Çok fazla deneme yapıldı. Lütfen birkaç dakika sonra tekrar deneyiniz.', 429);
     const tc = typeof body.tcNo === 'string' ? body.tcNo.trim() : '';
     if (!isValidTCKN(tc)) return fail('Geçerli bir T.C. Kimlik Numarası giriniz.');
     const lookup = await findMemberByTc(tc);
@@ -38,10 +40,13 @@ export async function POST(req: NextRequest) {
       { ...result.data, ...(memberPartnerId ? { talpaMember: true, odooPartnerId: memberPartnerId } : {}) },
       'form'
     );
-    return ok({ name: reg.fullName });
+    // A member's name comes from Odoo; echoing it back would undo the masking of /api/member/verify.
+    return ok({ name: memberPartnerId ? '' : reg.fullName });
   } catch (e) {
     if (e instanceof DuplicateEmailError)
       return fail('Bu e-posta adresiyle kaydınız zaten alınmış. Değişiklik için bizimle iletişime geçebilirsiniz.', 409);
+    if (e instanceof DuplicateMemberError)
+      return fail('Bu TALPA üyeliğiyle kaydınız zaten alınmış. Değişiklik için bizimle iletişime geçebilirsiniz.', 409);
     console.error('register failed', e);
     return fail('Kayıt şu anda alınamadı. Lütfen biraz sonra tekrar deneyiniz.', 500);
   }

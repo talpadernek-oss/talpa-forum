@@ -25,7 +25,7 @@ export const normalizePhone = (phone: string) => {
   return (t.startsWith('+') ? '+' : '') + t.replace(/\D/g, '');
 };
 
-const isValidPhone = (phone: string) => {
+export const isValidPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, '');
   return digits.length >= 10 && digits.length <= 15;
 };

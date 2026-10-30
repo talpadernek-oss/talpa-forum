@@ -1,4 +1,5 @@
 import 'server-only';
+import { isValidEmail, isValidPhone } from './validation';
 
 /**
  * TALPA member lookup in Odoo over JSON-RPC (`/jsonrpc`, API key as password).
@@ -177,13 +178,15 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
       c.email.model ? readLinked(s, c.model, id, c.email, c.emailFields) : first(row, c.emailFields),
       c.phone.model ? readLinked(s, c.model, id, c.phone, c.phoneFields) : first(row, c.phoneFields)
     ]);
+    // Values the form would reject are dropped, so the member is asked to type them instead of
+    // seeing a read-only masked field that fails on submit.
     return {
       kind: 'member',
       member: {
         partnerId: id,
         fullName: titleCase(first(row, c.nameFields)),
-        email: email.toLowerCase(),
-        phone,
+        email: isValidEmail(email.toLowerCase()) ? email.toLowerCase() : '',
+        phone: isValidPhone(phone) ? phone : '',
         organization: first(row, c.orgFields)
       }
     };

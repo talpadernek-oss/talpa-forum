@@ -102,7 +102,8 @@ export default function RegistrationForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) throw new Error(data.error || 'Kayıt alınamadı.');
-      setDoneName(data.name || form.fullName.trim());
+      // Members get no name back (it would reveal the unmasked Odoo record).
+      setDoneName(member ? '' : data.name || form.fullName.trim());
       setForm(EMPTY);
       setIsMember(false);
       setTcNo('');
@@ -120,8 +121,8 @@ export default function RegistrationForm() {
         <CheckCircle2 className="h-14 w-14 text-emerald-500" aria-hidden />
         <h3 className="mt-4 text-2xl font-extrabold text-forum-navy">Kaydınız alındı</h3>
         <p className="mt-3 max-w-md leading-relaxed text-slate-600">
-          Sayın <strong className="text-forum-navy">{doneName}</strong>, 2. TALPA Uçuş Emniyet Forumu’na kaydınız için
-          teşekkür ederiz. 1–2 Aralık 2026’da sizi aramızda görmekten memnuniyet duyacağız.
+          {doneName ? <>Sayın <strong className="text-forum-navy">{doneName}</strong>, 2.</> : '2.'} TALPA Uçuş Emniyet Forumu’na
+          kaydınız için teşekkür ederiz. 1–2 Aralık 2026’da sizi aramızda görmekten memnuniyet duyacağız.
         </p>
         <button type="button" onClick={() => setDoneName(null)} className="btn-ghost mt-8">
           Başka bir kişi kaydet
