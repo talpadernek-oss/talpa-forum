@@ -17,6 +17,7 @@ import {
   TrainFront
 } from 'lucide-react';
 import RegistrationForm from '@/components/RegistrationForm';
+import DayOffNotice from '@/components/DayOffNotice';
 import { EVENT } from '@/lib/constants';
 
 const UNITS = [
@@ -160,7 +161,7 @@ export default function Home() {
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">Davet</p>
               <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">
-                Uçuş emniyetini birlikte konuşuyoruz
+                Uçuş emniyetini hep birlikte koruyor, hep birlikte en üst düzeyde tutuyoruz.
               </h2>
               <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-slate-600">
                 <p>
@@ -340,13 +341,7 @@ export default function Home() {
               <p className="mt-4 text-[15px] leading-relaxed text-slate-500">
                 Kurumunuzdan birden fazla kişi katılacaksa her katılımcının ayrı kayıt yapması gerekir.
               </p>
-              <div className="mt-8 rounded-2xl border-l-4 border-forum-sunset bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <p className="text-lg font-bold text-forum-navy">Değerli Katılımcılarımız,</p>
-                <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
-                  Bu sene 1-2 Aralık’ta düzenlenecek TALPA Uçuş Emniyet Forumu için ilgili şirket departmanlarınızdan{' '}
-                  <strong className="text-forum-navy">‘Boş Gün’</strong> talep etmeyi unutmayınız.
-                </p>
-              </div>
+              <DayOffNotice className="mt-8" />
             </div>
             <RegistrationForm />
           </div>

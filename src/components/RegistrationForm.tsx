@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CheckCircle2, Loader2, AlertCircle, BadgeCheck, Info } from 'lucide-react';
 import { DAYS, JOB_TITLES, OTHER_TITLE, type DayValue } from '@/lib/constants';
+import DayOffNotice from './DayOffNotice';
 
 /** Masked values from /api/member/verify; the server fills in the real ones on submit. */
 type Member = { name: string; email: string; phone: string; organization: string };
@@ -125,6 +126,7 @@ export default function RegistrationForm() {
           {doneName ? <>Sayın <strong className="text-forum-navy">{doneName}</strong>, 2.</> : '2.'} TALPA Uçuş Emniyet Forumu’na
           kaydınız için teşekkür ederiz. 1–2 Aralık 2026’da sizi aramızda görmekten memnuniyet duyacağız.
         </p>
+        <DayOffNotice className="mt-6 w-full max-w-md" />
         <button type="button" onClick={() => setDoneName(null)} className="btn-ghost mt-8">
           Başka bir kişi kaydet
         </button>
