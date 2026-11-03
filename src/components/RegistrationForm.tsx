@@ -72,7 +72,8 @@ export default function RegistrationForm() {
       setMember(m);
       setForm(f => ({
         ...f,
-        jobTitle: f.jobTitle || 'Pilot',
+        // Odoo doesn't return the member's rank; an empty title defaults to captain and stays editable.
+        jobTitle: f.jobTitle || 'Kaptan Pilot',
         organization: f.organization || m.organization
       }));
     } catch (err: any) {

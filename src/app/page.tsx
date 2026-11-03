@@ -11,7 +11,10 @@ import {
   Download,
   Instagram,
   Linkedin,
-  Globe
+  Globe,
+  ExternalLink,
+  Car,
+  TrainFront
 } from 'lucide-react';
 import RegistrationForm from '@/components/RegistrationForm';
 import { EVENT } from '@/lib/constants';
@@ -80,6 +83,7 @@ export default function Home() {
             <a href="#program" className="hover:text-white">Program</a>
             <a href="#katilim" className="hover:text-white">Kimler Katılmalı</a>
             <a href="#mekan" className="hover:text-white">Tarih & Mekân</a>
+            <a href="#ulasim" className="hover:text-white">Ulaşım</a>
           </nav>
           <a href="#kayit" className="btn-primary px-4 py-2 text-sm">
             Kayıt Ol
@@ -307,13 +311,18 @@ export default function Home() {
             {[
               { icon: CalendarDays, label: 'Tarih', value: '1–2 Aralık 2026', sub: 'Salı – Çarşamba' },
               { icon: Clock, label: 'Saat', value: EVENT.startTime, sub: 'Kayıt ve karşılama ile başlar' },
-              { icon: MapPin, label: 'Mekân', value: EVENT.venue, sub: EVENT.city }
-            ].map(({ icon: Icon, label, value, sub }) => (
+              { icon: MapPin, label: 'Mekân', value: EVENT.venue, sub: EVENT.city, href: EVENT.mapsUrl }
+            ].map(({ icon: Icon, label, value, sub, href }) => (
               <div key={label} className="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-sm">
-                <Icon className="h-6 w-6 text-forum-sunset" aria-hidden />
-                <p className="mt-4 text-xs font-bold uppercase tracking-[0.16em] text-white/60">{label}</p>
-                <p className="mt-1 text-xl font-bold leading-snug">{value}</p>
+                {/* The icon stands in for the visible label. */}
+                <Icon className="h-6 w-6 text-forum-sunset" aria-label={label} />
+                <p className="mt-4 text-xl font-bold leading-snug">{value}</p>
                 <p className="mt-1 text-sm text-white/70">{sub}</p>
+                {href && (
+                  <a href={href} target="_blank" rel="noopener" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-forum-sunset hover:underline">
+                    Konum için tıklayınız <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                  </a>
+                )}
               </div>
             ))}
           </div>
@@ -326,14 +335,72 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">Kayıt</p>
               <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">Katılım başvurusu</h2>
               <p className="mt-5 text-[17px] leading-relaxed text-slate-600">
-                Forumumuza katılım için formu doldurmanız yeterlidir. Kaydınız alındıktan sonra etkinlikle ilgili
-                bilgilendirmeler e-posta adresinize iletilecektir.
+                Kaydınız alındıktan sonra etkinlikle ilgili bilgilendirmeler e-posta adresinize iletilecektir.
               </p>
               <p className="mt-4 text-[15px] leading-relaxed text-slate-500">
                 Kurumunuzdan birden fazla kişi katılacaksa her katılımcının ayrı kayıt yapması gerekir.
               </p>
+              <div className="mt-8 rounded-2xl border-l-4 border-forum-sunset bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                <p className="text-lg font-bold text-forum-navy">Değerli Katılımcılarımız,</p>
+                <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
+                  Bu sene 1-2 Aralık’ta düzenlenecek TALPA Uçuş Emniyet Forumu için ilgili şirket departmanlarınızdan{' '}
+                  <strong className="text-forum-navy">‘Boş Gün’</strong> talep etmeyi unutmayınız.
+                </p>
+              </div>
             </div>
             <RegistrationForm />
+          </div>
+        </section>
+
+        {/* ---------- Getting there ---------- */}
+        <section id="ulasim" className="bg-white py-20 sm:py-24">
+          <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">Ulaşım</p>
+              <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">Etkinlik alanına ulaşım</h2>
+              <div className="mt-6 flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forum-mist text-forum-blue">
+                  <MapPin className="h-5 w-5" aria-hidden />
+                </span>
+                <p className="text-[17px] leading-relaxed text-slate-600">
+                  <strong className="block text-forum-navy">{EVENT.venue} Adresi:</strong>
+                  {EVENT.address}
+                </p>
+              </div>
+              <div className="mt-5 flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forum-mist text-forum-blue">
+                  <Car className="h-5 w-5" aria-hidden />
+                </span>
+                <p className="text-[17px] leading-relaxed text-slate-600">
+                  Kendi aracı ile gelecek olan katılımcılarımız için açık otopark imkânı bulunmaktadır.
+                </p>
+              </div>
+              <div className="mt-5 flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forum-mist text-forum-blue">
+                  <TrainFront className="h-5 w-5" aria-hidden />
+                </span>
+                <p className="text-[17px] leading-relaxed text-slate-600">
+                  Toplu taşıma ile gelecek olan katılımcılarımız <strong className="text-forum-navy">M1A metrosu</strong> ile{' '}
+                  <strong className="text-forum-navy">Atatürk Havalimanı</strong> durağında inebilirler.
+                </p>
+              </div>
+              <a href={EVENT.mapsUrl} target="_blank" rel="noopener" className="btn-navy mt-8 inline-flex">
+                <MapPin className="h-4 w-4" aria-hidden /> Konum için tıklayınız
+              </a>
+            </div>
+            <figure>
+              <a href={EVENT.mapsUrl} target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl shadow-card ring-1 ring-slate-200">
+                <Image
+                  src="/ulasim-kroki.png"
+                  alt="Kroki: SHGM Türk Sivil Havacılık Akademisi, Yeni Havaalanı Caddesi üzerinde, Atatürk Havalimanı metro durağının kuzeydoğusunda"
+                  width={1052}
+                  height={710}
+                  sizes="(min-width: 1024px) 600px, 100vw"
+                  className="h-auto w-full"
+                />
+              </a>
+              <figcaption className="mt-3 text-center text-sm text-slate-500">Kroki – haritada açmak için tıklayınız</figcaption>
+            </figure>
           </div>
         </section>
       </main>

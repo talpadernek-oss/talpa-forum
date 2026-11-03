@@ -8,6 +8,8 @@ export const EVENT = {
   startTime: '09.00',
   venue: 'SHGM Türk Sivil Havacılık Akademisi',
   city: 'İstanbul',
+  address: 'Yeşilköy Mahallesi, Yeni Havaalanı Caddesi, No: 7, Bakırköy / İstanbul (DHMİ A Kapısı yanı)',
+  mapsUrl: 'https://maps.app.goo.gl/omhneBUTGUidrBaD7',
   startsAt: '2026-12-01T09:00:00+03:00',
   website: 'https://www.talpa.org',
   instagram: 'https://www.instagram.com/talpa_org/',
@@ -32,8 +34,10 @@ export const roleLabel = (v: string) => ROLES.find(r => r.value === v)?.label ??
 
 /** "Diğer" lets the person type their own title. */
 export const JOB_TITLES = [
-  'Pilot',
-  'Kabin Personeli',
+  'Kaptan Pilot',
+  'First Officer',
+  'Kabin Amiri',
+  'Kabin Memuru',
   'Uçuş Mühendisi',
   'Uçuş Dispeçeri / Harekât Uzmanı',
   'Hava Trafik Kontrolörü',
