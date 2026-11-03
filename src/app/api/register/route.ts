@@ -5,6 +5,7 @@ import { createRegistration, DuplicateEmailError, DuplicateMemberError } from '@
 import { isValidTCKN } from '@/lib/tckn';
 import { findMemberByTc } from '@/lib/odoo';
 import { rateLimited } from '@/lib/rateLimit';
+import { sendRegistrationConfirmation } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
 
   // TALPA members: name comes from Odoo; e-mail / phone left empty mean "use the Odoo value".
   let memberPartnerId: number | undefined;
+  let odooEmail = '';
   if (body?.tcNo) {
     if (rateLimited('member-lookup', req)) return fail('Çok fazla deneme yapıldı. Lütfen birkaç dakika sonra tekrar deneyiniz.', 429);
     const tc = typeof body.tcNo === 'string' ? body.tcNo.trim() : '';
@@ -26,6 +28,7 @@ export async function POST(req: NextRequest) {
     if (lookup.kind === 'not_member') return fail('Bu T.C. Kimlik Numarası ile aktif bir TALPA üyeliği bulunamadı.');
     const m = lookup.member;
     memberPartnerId = m.partnerId;
+    odooEmail = m.email;
     body.fullName = m.fullName || body.fullName;
     body.email = body.email || m.email;
     body.phone = body.phone || m.phone;
@@ -40,6 +43,11 @@ export async function POST(req: NextRequest) {
       { ...result.data, ...(memberPartnerId ? { talpaMember: true, odooPartnerId: memberPartnerId } : {}) },
       'form'
     );
+    // A member's Odoo name only goes to the member's own Odoo address; anyone can type a TC number
+    // with their own e-mail, and the name must stay masked for them (see /api/member/verify).
+    const mailName = !memberPartnerId || (odooEmail && reg.email === odooEmail) ? reg.fullName : '';
+    // Awaited: on Vercel the function may be frozen once the response is sent.
+    await sendRegistrationConfirmation(reg.email, mailName);
     // A member's name comes from Odoo; echoing it back would undo the masking of /api/member/verify.
     return ok({ name: memberPartnerId ? '' : reg.fullName });
   } catch (e) {
