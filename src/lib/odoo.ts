@@ -1,5 +1,6 @@
 import 'server-only';
 import { isValidEmail, isValidPhone } from './validation';
+import type { MessageKey } from './messages';
 
 /**
  * TALPA member lookup in Odoo over JSON-RPC (`/jsonrpc`, API key as password).
@@ -18,7 +19,7 @@ export interface OdooMember {
 export type MemberLookup =
   | { kind: 'member'; member: OdooMember }
   | { kind: 'not_member' }
-  | { kind: 'error'; error: string };
+  | { kind: 'error'; error: MessageKey };
 
 const env = (key: string, fallback = '') => (process.env[key] || fallback).trim();
 const csv = (v: string) => v.split(',').map(s => s.trim()).filter(Boolean);
@@ -137,7 +138,7 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
   if (!odooConfigured()) {
     const missing = ['ODOO_URL', 'ODOO_DB', 'ODOO_USERNAME', 'ODOO_API_KEY'].filter(k => !env(k));
     console.error('Odoo is not configured; missing', missing.join(', '));
-    return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+    return { kind: 'error', error: 'memberUnavailable' };
   }
 
   let extraDomain: unknown[];
@@ -146,21 +147,21 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
     if (!Array.isArray(extraDomain)) throw new Error();
   } catch {
     console.error('ODOO_MEMBER_DOMAIN is not a JSON array');
-    return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+    return { kind: 'error', error: 'memberUnavailable' };
   }
 
   try {
     const uid = await rpc<number | false>(c.url, 'common', 'authenticate', [c.db, c.login, c.apiKey, {}]);
     if (!uid) {
       console.error('Odoo authentication failed for', c.login);
-      return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+      return { kind: 'error', error: 'memberUnavailable' };
     }
 
     const s: Session = { url: c.url, db: c.db, uid, apiKey: c.apiKey };
     const info = await fieldsOf(s, c.model);
     if (!info[c.tcField]) {
       console.error(`Odoo: ${c.model} has no field ${c.tcField}; check ODOO_TC_FIELD`);
-      return { kind: 'error', error: 'Üyelik doğrulama şu anda kullanılamıyor.' };
+      return { kind: 'error', error: 'memberUnavailable' };
     }
     // E-mail / phone fields belong to the linked model when one is configured.
     const ownFields = [...c.nameFields, ...c.orgFields, ...(c.email.model ? [] : c.emailFields), ...(c.phone.model ? [] : c.phoneFields)];
@@ -192,7 +193,7 @@ export async function findMemberByTc(tc: string): Promise<MemberLookup> {
     };
   } catch (e) {
     console.error('Odoo member lookup failed', e);
-    return { kind: 'error', error: 'Üyelik sistemine şu anda ulaşılamıyor. Lütfen biraz sonra tekrar deneyiniz.' };
+    return { kind: 'error', error: 'memberUnreachable' };
   }
 }
 

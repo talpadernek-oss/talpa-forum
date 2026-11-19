@@ -1,4 +1,5 @@
 import { DAYS, ROLES, type DayValue, type RoleValue } from './constants';
+import { msg, type Lang, type MessageKey } from './messages';
 
 export interface RegistrationFields {
   fullName: string;
@@ -34,7 +35,8 @@ export const isValidPhone = (phone: string) => {
  * `public`: the website form – every field is required, role is always "katılımcı".
  * `admin`: manual entry / edit – only the name is required (protocol guests may have no e-mail).
  */
-export function validateRegistration(input: any, mode: 'public' | 'admin'): Result {
+export function validateRegistration(input: any, mode: 'public' | 'admin', lang: Lang = 'tr'): Result {
+  const fail = (key: MessageKey): Result => ({ ok: false, error: msg(key, lang) });
   const fullName = clean(input?.fullName);
   const email = clean(input?.email).toLowerCase();
   const phone = normalizePhone(clean(input?.phone, 30));
@@ -47,19 +49,19 @@ export function validateRegistration(input: any, mode: 'public' | 'admin'): Resu
   const role: RoleValue =
     mode === 'admin' && ROLES.some(r => r.value === input?.role) ? input.role : 'katilimci';
 
-  if (fullName.length < 3) return { ok: false, error: 'Lütfen ad ve soyadı giriniz.' };
-  if (mode === 'public' && !fullName.includes(' ')) return { ok: false, error: 'Lütfen ad ve soyadınızı birlikte giriniz.' };
+  if (fullName.length < 3) return fail('nameRequired');
+  if (mode === 'public' && !fullName.includes(' ')) return fail('nameBoth');
 
   if (mode === 'public' || email) {
-    if (!isValidEmail(email)) return { ok: false, error: 'Geçerli bir e-posta adresi giriniz.' };
+    if (!isValidEmail(email)) return fail('emailInvalid');
   }
   if (mode === 'public' || phone) {
-    if (!isValidPhone(phone)) return { ok: false, error: 'Geçerli bir telefon numarası giriniz (ör. 0532 123 45 67).' };
+    if (!isValidPhone(phone)) return fail('phoneInvalid');
   }
   if (mode === 'public') {
-    if (!jobTitle) return { ok: false, error: 'Lütfen iş ünvanınızı seçiniz.' };
-    if (!organization) return { ok: false, error: 'Lütfen çalıştığınız firma / kurumu giriniz.' };
-    if (!days.length) return { ok: false, error: 'Lütfen katılacağınız günü seçiniz.' };
+    if (!jobTitle) return fail('jobTitleRequired');
+    if (!organization) return fail('organizationRequired');
+    if (!days.length) return fail('daysRequired');
   }
 
   return {

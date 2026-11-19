@@ -195,8 +195,13 @@ export default function AdminApp() {
                     <td className="px-4 py-3">
                       <p className="font-semibold text-forum-navy">{r.fullName}</p>
                       {r.talpaMember && (
-                        <span className="mt-1 inline-block rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-sky-800 ring-1 ring-sky-200">
+                        <span className="mr-1 mt-1 inline-block rounded bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-sky-800 ring-1 ring-sky-200">
                           TALPA Üyesi
+                        </span>
+                      )}
+                      {r.lang === 'en' && (
+                        <span title="İngilizce sayfadan kayıt" className="mt-1 inline-block rounded bg-violet-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-violet-700 ring-1 ring-violet-200">
+                          EN
                         </span>
                       )}
                       {r.notes && <p className="mt-0.5 max-w-[220px] truncate text-xs text-slate-500" title={r.notes}>{r.notes}</p>}
@@ -457,7 +462,7 @@ function exportCsv(rows: Registration[]) {
   const esc = (v: string) => `"${(v ?? '').replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
   // ="0532…" keeps the leading 0 / + that Excel would otherwise drop (phones are digits and + only).
   const phone = (v: string) => (v ? `="${v}"` : '""');
-  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Kayıt Tarihi'];
+  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Dil', 'Kayıt Tarihi'];
   const lines = rows.map(r =>
     [
       esc(r.fullName),
@@ -473,6 +478,7 @@ function exportCsv(rows: Registration[]) {
         r.checkedIn ? 'Evet' : 'Hayır',
         r.notes,
         r.source === 'manual' ? 'Manuel' : 'Web formu',
+        r.lang === 'en' ? 'İngilizce' : 'Türkçe',
         fmtDate(r.createdAt)
       ].map(esc)
     ].join(';')
