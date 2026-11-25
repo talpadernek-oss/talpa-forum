@@ -17,6 +17,13 @@ export const EVENT = {
   linkedin: 'https://www.linkedin.com/company/talpa/'
 } as const;
 
+/**
+ * Each language has its own domain in production; src/middleware.ts serves /en on the English one.
+ * Locally and on preview deployments the pages are simply / and /en.
+ */
+export const SITE_HOSTS = { tr: 'ucusemniyetforumu.talpa.org', en: 'flightsafetyforum.talpa.org' } as const;
+export const siteUrl = (lang: Lang) => `https://${SITE_HOSTS[lang]}/`;
+
 /** Partner hotel for participants coming from outside Istanbul; agreed rates in EUR, single / double occupancy. */
 export const HOTEL = {
   name: 'Crowne Plaza Istanbul Florya',

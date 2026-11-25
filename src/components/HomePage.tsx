@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import RegistrationForm from '@/components/RegistrationForm';
 import DayOffNotice from '@/components/DayOffNotice';
-import { EVENT, HOTEL } from '@/lib/constants';
+import { EVENT, HOTEL, siteUrl } from '@/lib/constants';
 import { HOME_COPY } from '@/content/home';
 import type { Lang } from '@/lib/messages';
 
@@ -33,6 +33,8 @@ function Logo({ sub, className = '' }: { sub: string; className?: string }) {
 
 export default function HomePage({ lang }: { lang: Lang }) {
   const t = HOME_COPY[lang];
+  // In production the other language lives on its own domain; "/" on the English domain is the English page.
+  const switchHref = process.env.VERCEL_ENV === 'production' ? siteUrl(lang === 'tr' ? 'en' : 'tr') : t.switchTo.href;
 
   return (
     // Root layout is Turkish; marking the English page keeps screen readers and translators right.
@@ -53,7 +55,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
           </nav>
           <div className="flex items-center gap-2">
             <a
-              href={t.switchTo.href}
+              href={switchHref}
               hrefLang={t.switchTo.label.toLowerCase()}
               aria-label={t.switchTo.aria}
               className="inline-flex items-center gap-1.5 rounded-lg border border-white/30 px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
