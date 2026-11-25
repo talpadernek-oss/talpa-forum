@@ -7,7 +7,7 @@ export interface HomeCopy {
   switchTo: { href: string; label: string; aria: string };
   logoSub: string;
   topAria: string;
-  nav: { forum: string; program: string; venue: string; travel: string; stay: string; register: string };
+  nav: { forum: string; speakers: string; program: string; venue: string; travel: string; stay: string; register: string };
   hero: {
     edition: string;
     title: string;
@@ -20,6 +20,8 @@ export interface HomeCopy {
     ctaProgram: string;
   };
   about: { tag: string; heading: string; paragraphs: ReactNode[]; quote: string; posterAlt: string; posterDownload: string };
+  /** Speakers and moderator as one image; the alt text lists them for screen readers and search. */
+  speakers: { heading: string; image: { src: string; alt: string }; openHint: string };
   program: {
     tag: string;
     heading: string;
@@ -64,7 +66,7 @@ const tr: HomeCopy = {
   switchTo: { href: '/en', label: 'EN', aria: 'Switch to English' },
   logoSub: 'Uçuş Emniyet Forumu',
   topAria: 'Sayfa başı',
-  nav: { forum: 'Forum', program: 'Program', venue: 'Tarih & Mekân', travel: 'Ulaşım', stay: 'Konaklama', register: 'Kayıt Ol' },
+  nav: { forum: 'Forum', speakers: 'Konuşmacılar', program: 'Program', venue: 'Tarih & Mekân', travel: 'Ulaşım', stay: 'Konaklama', register: 'Kayıt Ol' },
   hero: {
     edition: '2. TALPA',
     title: 'Uçuş Emniyet Forumu',
@@ -91,12 +93,20 @@ const tr: HomeCopy = {
     posterAlt: '2. TALPA Uçuş Emniyet Forumu afişi – 1-2 Aralık 2026, SHGM Türk Sivil Havacılık Akademisi',
     posterDownload: 'Afişi indir'
   },
+  speakers: {
+    heading: 'Konuşmacılar',
+    image: {
+      src: '/speakers-tr.jpg',
+      alt: 'Konuşmacılar: Kpt. Plt. Juan Carlos LOZANO (ECA Direktörü, bir önceki; IFALPA Başkan Yardımcısı, bir önceki), Prof. Dr. Murat EFE (Ankara Üniversitesi), Prof. Dr. Michael FELUX (Zürih Uygulamalı Bilimler Üniversitesi), Dr. Okuary OSECHAS (Zürih Uygulamalı Bilimler Üniversitesi), Kpt. Plt. Melih YARARCAN (Pegasus Hava Yolları), Psk. Simay LEBLEBİCİ (TALPA MDA Program Psikoloğu), Kpt. Plt. Muharrem GÜNDOĞAN (TALPA MDA Program Koordinatörü), Kpt. Plt. Bülent ATAŞ (Türk Hava Yolları), Nedim YARDIMCI (Türk Hava Yolları), Buğra IŞIK (Türk Hava Yolları), Kpt. Plt. Muhammet E. AKIN (SunExpress), Özcan ÇETİN (SunExpress). Moderatör: Plt. Merve BAŞARAN (ECA Uçuş Standartları ve Operasyon Çalışma Grubu Başkanı).'
+    },
+    openHint: 'Büyük boyutta görüntülemek için görsele tıklayınız.'
+  },
   program: {
     tag: 'Program',
     heading: '1-2 Aralık TALPA Uçuş Emniyet Forum Programı',
     pages: [
       { src: '/program-tr-1.jpg', alt: '1. Gün programı – 1 Aralık 2026, Salı' },
-      { src: '/program-tr-2.jpg', alt: '2. Gün programı – 2 Aralık 2026, Çarşamba' }
+      { src: '/program-tr-2-r2.jpg', alt: '2. Gün programı – 2 Aralık 2026, Çarşamba' }
     ],
     openHint: 'Büyük boyutta görüntülemek için programa tıklayınız.'
   },
@@ -144,7 +154,7 @@ const en: HomeCopy = {
   switchTo: { href: '/', label: 'TR', aria: 'Türkçe sayfaya geç' },
   logoSub: 'Flight Safety Forum',
   topAria: 'Back to top',
-  nav: { forum: 'Forum', program: 'Programme', venue: 'Date & Venue', travel: 'Getting There', stay: 'Accommodation', register: 'Register' },
+  nav: { forum: 'Forum', speakers: 'Speakers', program: 'Programme', venue: 'Date & Venue', travel: 'Getting There', stay: 'Accommodation', register: 'Register' },
   hero: {
     edition: '2nd TALPA',
     title: 'Flight Safety Forum',
@@ -171,12 +181,20 @@ const en: HomeCopy = {
     posterAlt: '2nd TALPA Flight Safety Forum poster – 1-2 December 2026, Turkish DGCA (SHGM) Civil Aviation Academy',
     posterDownload: 'Download poster'
   },
+  speakers: {
+    heading: 'Speakers',
+    image: {
+      src: '/speakers-en.jpg',
+      alt: 'Speakers: Capt. Juan Carlos LOZANO (Former ECA Tech. Director, Former IFALPA Deputy President), Prof. Dr. Murat EFE (Ankara University), Prof. Dr. Michael FELUX (Zurich University of Applied Sciences), Dr. Okuary OSECHAS (Zurich University of Applied Sciences), Capt. Melih YARARCAN (Pegasus Airlines), Psych. Simay LEBLEBİCİ (TALPA MDA Program Psychologist), Capt. Muharrem GÜNDOĞAN (TALPA MDA Program Supervisor), Capt. Bülent ATAŞ (Turkish Airlines), Nedim YARDIMCI (Turkish Airlines), Buğra IŞIK (Turkish Airlines), Capt. Muhammet E. AKIN (SunExpress), Özcan ÇETİN (SunExpress). Moderator: Plt. Merve BAŞARAN (ECA Flight Standards and Operations Working Group Chair).'
+    },
+    openHint: 'Click on the image to view it full size.'
+  },
   program: {
     tag: 'Programme',
     heading: 'TALPA Flight Safety Forum Programme, 1-2 December',
     pages: [
       { src: '/program-en-1.jpg', alt: 'Day 1 programme – Tuesday, 1 December 2026' },
-      { src: '/program-en-2.jpg', alt: 'Day 2 programme – Wednesday, 2 December 2026' }
+      { src: '/program-en-2-r2.jpg', alt: 'Day 2 programme – Wednesday, 2 December 2026' }
     ],
     openHint: 'Click on a page to view it full size.'
   },

@@ -46,6 +46,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
           </a>
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/80 xl:flex">
             <a href="#forum" className="hover:text-white">{t.nav.forum}</a>
+            <a href="#konusmacilar" className="hover:text-white">{t.nav.speakers}</a>
             <a href="#program" className="hover:text-white">{t.nav.program}</a>
             <a href="#mekan" className="hover:text-white">{t.nav.venue}</a>
             <a href="#ulasim" className="hover:text-white">{t.nav.travel}</a>
@@ -161,8 +162,27 @@ export default function HomePage({ lang }: { lang: Lang }) {
           </div>
         </section>
 
+        {/* ---------- Speakers ---------- */}
+        <section id="konusmacilar" className="bg-slate-50 py-20 sm:py-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <h2 className="text-3xl font-extrabold text-forum-navy sm:text-4xl">{t.speakers.heading}</h2>
+            <a href={t.speakers.image.src} target="_blank" rel="noopener"
+              className="mt-10 block overflow-hidden rounded-2xl shadow-card ring-1 ring-slate-200 transition hover:ring-forum-blue/50">
+              <Image
+                src={t.speakers.image.src}
+                alt={t.speakers.image.alt}
+                width={3840}
+                height={2160}
+                sizes="(min-width: 1152px) 1104px, 100vw"
+                className="h-auto w-full"
+              />
+            </a>
+            <p className="mt-4 text-center text-sm text-slate-500">{t.speakers.openHint}</p>
+          </div>
+        </section>
+
         {/* ---------- Program ---------- */}
-        <section id="program" className="bg-slate-50 py-20 sm:py-24">
+        <section id="program" className="bg-white py-20 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">{t.program.tag}</p>
             <h2 className="mt-2 text-3xl font-extrabold text-forum-navy sm:text-4xl">{t.program.heading}</h2>
