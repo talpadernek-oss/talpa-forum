@@ -23,8 +23,10 @@ export interface HomeCopy {
   program: {
     tag: string;
     heading: string;
-    month: string;
-    days: { weekday: string; sessions: { tag?: string; title: string; paragraphs: string[] }[] }[];
+    /** Programme pages as images under public/, day 1 first. */
+    pages: { src: string; alt: string }[];
+    /** Hint under the images: they open full size in a new tab. */
+    openHint: string;
   };
   attend: { tag: string; heading: string; paragraphs: string[]; units: string[] };
   venue: {
@@ -92,49 +94,12 @@ const tr: HomeCopy = {
   },
   program: {
     tag: 'Program',
-    heading: 'İki gün, dört ana başlık',
-    month: 'Aralık 2026',
-    days: [
-      {
-        weekday: 'Salı',
-        sessions: [
-          {
-            title: 'Positive Safety Culture (Pozitif Emniyet Kültürü)',
-            paragraphs: [
-              'Uçuş emniyetinin temelinde yer alan güven ortamı, adil kültür (Just Culture), psikolojik güvenlik, şeffaf raporlama ve kurumsal hesap verebilirlik konuları ele alınacaktır.',
-              'Pozitif Emniyet Kültürü’nün yalnızca Emniyet Yönetim Sistemi’nin (SMS) bir unsuru değil, üst yönetim tarafından sahiplenilen ve tüm kuruma yayılan bir yönetim anlayışı olarak geliştirilmesi tartışılacaktır.'
-            ]
-          },
-          {
-            tag: 'TALPA-MDA · Meslektaş Destek Programı',
-            title: 'Havacılıkta Ruh Sağlığı, Esenlik ve Uçuş Emniyeti: Farkındalıktan Akran Desteğine',
-            paragraphs: [
-              'Havacılık çalışanlarının ruh sağlığı ve psikolojik esenliğinin uçuş emniyetindeki öneminin ele alınacağı oturumda; Flight Safety Foundation ve European Cockpit Association (ECA) yaklaşımları, farklı uçuş operasyonlarında karşılaşılan iş yükü, stres ve psikososyal riskler değerlendirilecektir.',
-              'Ayrıca, TALPA-MDA Akran Destek Programı kapsamında edinilen deneyimler, akran destek gönüllülerinin yetkinlikleri, güven, gizlilik ve etik ilkeler ile sürdürülebilir bir destek kültürünün geliştirilmesine yönelik kurumsal iş birliği ele alınacaktır.'
-            ]
-          }
-        ]
-      },
-      {
-        weekday: 'Çarşamba',
-        sessions: [
-          {
-            title: 'GNSS/GPS ve TCAS Spoofing & Jamming',
-            paragraphs: [
-              'Uydu tabanlı seyrüsefer sistemlerine yönelik kasıtlı sinyal bozma ve yanıltma girişimlerinin uçuş operasyonları, seyrüsefer güvenilirliği ve hava trafik sistemleri üzerindeki etkileri değerlendirilecektir.',
-              'Özellikle GNSS kaynaklı yanıltıcı verilerin uçak sistemleri ve TCAS üzerindeki olası etkileri, operasyonel riskler ve alınabilecek önlemler ele alınacaktır.'
-            ]
-          },
-          {
-            title: 'FTL ve Fatigue Risk Management System (FRMS)',
-            paragraphs: [
-              'Uçuş ve görev süresi sınırlamalarının (FTL), bilimsel yorgunluk yönetimi ilkeleriyle birlikte değerlendirilmesi; görev planlaması, dinlenme süreleri, sirkadiyen ritim ve birikimli yorgunluğun uçuş emniyetine etkileri tartışılacaktır.',
-              'Düzenleyici gerekliliklerin ötesine geçen, veriye dayalı ve proaktif bir Bitkinlik Risk Yönetim Sistemi’nin geliştirilmesine yönelik yaklaşımlar ele alınacaktır.'
-            ]
-          }
-        ]
-      }
-    ]
+    heading: '1-2 Aralık TALPA Uçuş Emniyet Forum Programı',
+    pages: [
+      { src: '/program-tr-1.jpg', alt: '1. Gün programı – 1 Aralık 2026, Salı' },
+      { src: '/program-tr-2.jpg', alt: '2. Gün programı – 2 Aralık 2026, Çarşamba' }
+    ],
+    openHint: 'Büyük boyutta görüntülemek için programa tıklayınız.'
   },
   attend: {
     tag: 'Kimler katılmalı',
@@ -219,49 +184,12 @@ const en: HomeCopy = {
   },
   program: {
     tag: 'Programme',
-    heading: 'Two days, four key topics',
-    month: 'December 2026',
-    days: [
-      {
-        weekday: 'Tuesday',
-        sessions: [
-          {
-            title: 'Positive Safety Culture',
-            paragraphs: [
-              'The session will address the foundations of flight safety: an environment of trust, Just Culture, psychological safety, open reporting and organisational accountability.',
-              'It will discuss developing a Positive Safety Culture not merely as one element of the Safety Management System (SMS), but as a management approach owned by senior management and embedded across the entire organisation.'
-            ]
-          },
-          {
-            tag: 'TALPA-MDA · Peer Support Programme',
-            title: 'Mental Health, Well-being and Flight Safety in Aviation: From Awareness to Peer Support',
-            paragraphs: [
-              'This session will address the importance of the mental health and psychological well-being of aviation personnel for flight safety, reviewing the approaches of the Flight Safety Foundation and the European Cockpit Association (ECA), as well as the workload, stress and psychosocial risks encountered across different types of flight operations.',
-              'It will also cover the experience gained through the TALPA-MDA Peer Support Programme, the competencies of peer support volunteers, the principles of trust, confidentiality and ethics, and institutional cooperation towards a sustainable peer support culture.'
-            ]
-          }
-        ]
-      },
-      {
-        weekday: 'Wednesday',
-        sessions: [
-          {
-            title: 'GNSS/GPS and TCAS Spoofing & Jamming',
-            paragraphs: [
-              'The session will assess the impact of intentional interference with, and spoofing of, satellite-based navigation systems on flight operations, navigation integrity and air traffic systems.',
-              'In particular, it will address the potential effects of misleading GNSS data on aircraft systems and TCAS, the resulting operational risks and possible mitigation measures.'
-            ]
-          },
-          {
-            title: 'FTL and Fatigue Risk Management System (FRMS)',
-            paragraphs: [
-              'Flight Time Limitations (FTL) will be examined together with scientific principles of fatigue management, discussing rostering, rest periods, circadian rhythm and the effects of cumulative fatigue on flight safety.',
-              'Approaches to developing a data-driven, proactive Fatigue Risk Management System that goes beyond regulatory requirements will be addressed.'
-            ]
-          }
-        ]
-      }
-    ]
+    heading: 'TALPA Flight Safety Forum Programme, 1-2 December',
+    pages: [
+      { src: '/program-en-1.jpg', alt: 'Day 1 programme – Tuesday, 1 December 2026' },
+      { src: '/program-en-2.jpg', alt: 'Day 2 programme – Wednesday, 2 December 2026' }
+    ],
+    openHint: 'Click on a page to view it full size.'
   },
   attend: {
     tag: 'Who should attend',

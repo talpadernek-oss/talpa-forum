@@ -3,10 +3,6 @@ import {
   CalendarDays,
   Clock,
   MapPin,
-  ShieldCheck,
-  HeartHandshake,
-  Satellite,
-  BedDouble,
   ArrowRight,
   Download,
   Instagram,
@@ -23,12 +19,6 @@ import { EVENT, HOTEL } from '@/lib/constants';
 import { HOME_COPY } from '@/content/home';
 import type { Lang } from '@/lib/messages';
 
-/** Icons of the programme sessions, in the order of HomeCopy.program.days[].sessions. */
-const SESSION_ICONS = [
-  [ShieldCheck, HeartHandshake],
-  [Satellite, BedDouble]
-];
-
 function Logo({ sub, className = '' }: { sub: string; className?: string }) {
   return (
     <span className={`flex items-center gap-2.5 ${className}`}>
@@ -38,33 +28,6 @@ function Logo({ sub, className = '' }: { sub: string; className?: string }) {
         <span className="block text-[10px] font-medium uppercase tracking-[0.18em] opacity-70">{sub}</span>
       </span>
     </span>
-  );
-}
-
-function SessionCard({
-  icon: Icon,
-  tag,
-  title,
-  children
-}: {
-  icon: typeof ShieldCheck;
-  tag?: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-card sm:p-7">
-      <div className="mb-4 flex items-start gap-4">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-forum-mist text-forum-blue">
-          <Icon className="h-5 w-5" aria-hidden />
-        </span>
-        <div>
-          {tag && <p className="text-xs font-bold uppercase tracking-[0.14em] text-forum-ember">{tag}</p>}
-          <h4 className="text-lg font-bold leading-snug text-forum-navy">{title}</h4>
-        </div>
-      </div>
-      <div className="space-y-3 text-[15px] leading-relaxed text-slate-600">{children}</div>
-    </article>
   );
 }
 
@@ -204,20 +167,23 @@ export default function HomePage({ lang }: { lang: Lang }) {
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">{t.program.tag}</p>
             <h2 className="mt-2 text-3xl font-extrabold text-forum-navy sm:text-4xl">{t.program.heading}</h2>
 
-            <div className="mt-12 grid gap-12 lg:grid-cols-2 lg:gap-8">
-              {t.program.days.map((day, d) => (
-                <div key={d}>
-                  <DayHeading day={String(d + 1)} month={t.program.month} weekday={day.weekday} />
-                  <div className="space-y-6">
-                    {day.sessions.map((s, i) => (
-                      <SessionCard key={i} icon={SESSION_ICONS[d][i]} tag={s.tag} title={s.title}>
-                        {s.paragraphs.map((p, j) => <p key={j}>{p}</p>)}
-                      </SessionCard>
-                    ))}
-                  </div>
-                </div>
+            {/* Both pages have the same aspect ratio, so side by side they line up exactly. */}
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
+              {t.program.pages.map(page => (
+                <a key={page.src} href={page.src} target="_blank" rel="noopener"
+                  className="block overflow-hidden rounded-2xl shadow-card ring-1 ring-slate-200 transition hover:ring-forum-blue/50">
+                  <Image
+                    src={page.src}
+                    alt={page.alt}
+                    width={2382}
+                    height={3369}
+                    sizes="(min-width: 1152px) 544px, (min-width: 768px) 48vw, 100vw"
+                    className="h-auto w-full"
+                  />
+                </a>
               ))}
             </div>
+            <p className="mt-4 text-center text-sm text-slate-500">{t.program.openHint}</p>
           </div>
         </section>
 
@@ -395,18 +361,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
           <p className="text-center text-xs text-white/50">{t.footer.copyright}</p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function DayHeading({ day, month, weekday }: { day: string; month: string; weekday: string }) {
-  return (
-    <div className="mb-6 flex items-end gap-4">
-      <span className="text-6xl font-extrabold leading-none text-forum-navy">{day}</span>
-      <span className="pb-1 leading-tight">
-        <span className="block text-sm font-bold uppercase tracking-[0.16em] text-forum-blue">{month}</span>
-        <span className="block text-lg font-semibold text-slate-500">{weekday}</span>
-      </span>
     </div>
   );
 }
