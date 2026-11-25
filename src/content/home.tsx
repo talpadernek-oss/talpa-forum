@@ -19,7 +19,7 @@ export interface HomeCopy {
     cta: string;
     ctaProgram: string;
   };
-  about: { tag: string; heading: string; paragraphs: ReactNode[]; quote: string; posterAlt: string; posterDownload: string };
+  about: { tag: string; heading: string; paragraphs: ReactNode[]; quote: string };
   /** Speakers and moderator as one image; the alt text lists them for screen readers and search. */
   speakers: { heading: string; image: { src: string; alt: string }; openHint: string };
   program: {
@@ -89,9 +89,7 @@ const tr: HomeCopy = {
       </>,
       'İki gün sürecek etkinliğimizde, uçuş emniyetinin yalnızca teknik ve operasyonel boyutları değil; insan faktörü, kurumsal kültür, psikolojik esenlik ve sürdürülebilir emniyet yönetimi açısından taşıdığı önem de değerlendirilecektir.'
     ],
-    quote: '“Uçuş emniyeti, yalnızca kurallara uyumla değil; güven, ortak sorumluluk, bilimsel yaklaşım ve sürekli öğrenmeyle güçlenir.”',
-    posterAlt: '2. TALPA Uçuş Emniyet Forumu afişi – 1-2 Aralık 2026, SHGM Türk Sivil Havacılık Akademisi',
-    posterDownload: 'Afişi indir'
+    quote: '“Uçuş emniyeti, yalnızca kurallara uyumla değil; güven, ortak sorumluluk, bilimsel yaklaşım ve sürekli öğrenmeyle güçlenir.”'
   },
   speakers: {
     heading: 'Konuşmacılar',
@@ -177,9 +175,7 @@ const en: HomeCopy = {
       </>,
       'Over the two days, the forum will examine not only the technical and operational dimensions of flight safety, but also its significance for human factors, organisational culture, psychological well-being and sustainable safety management.'
     ],
-    quote: '“Flight safety is strengthened not only by compliance with rules, but by trust, shared responsibility, a scientific approach and continuous learning.”',
-    posterAlt: '2nd TALPA Flight Safety Forum poster – 1-2 December 2026, Turkish DGCA (SHGM) Civil Aviation Academy',
-    posterDownload: 'Download poster'
+    quote: '“Flight safety is strengthened not only by compliance with rules, but by trust, shared responsibility, a scientific approach and continuous learning.”'
   },
   speakers: {
     heading: 'Speakers',

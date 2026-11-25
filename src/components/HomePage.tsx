@@ -4,7 +4,6 @@ import {
   Clock,
   MapPin,
   ArrowRight,
-  Download,
   Instagram,
   Linkedin,
   Globe,
@@ -131,8 +130,9 @@ export default function HomePage({ lang }: { lang: Lang }) {
 
         {/* ---------- About ---------- */}
         <section id="forum" className="bg-white py-20 sm:py-24">
-          <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center">
-            <div>
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            {/* Kept to a readable line length now that the poster column is gone. */}
+            <div className="max-w-3xl">
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">{t.about.tag}</p>
               <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">{t.about.heading}</h2>
               <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-slate-600">
@@ -142,23 +142,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
                 {t.about.quote}
               </blockquote>
             </div>
-            <figure className="mx-auto w-full max-w-sm">
-              <a href="/forum-afis.jpg" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl shadow-card ring-1 ring-slate-200">
-                <Image
-                  src="/forum-afis.jpg"
-                  alt={t.about.posterAlt}
-                  width={950}
-                  height={1350}
-                  sizes="(min-width: 1024px) 384px, 90vw"
-                  className="h-auto w-full"
-                />
-              </a>
-              <figcaption className="mt-3 flex justify-center">
-                <a href="/forum-afis.jpg" download className="inline-flex items-center gap-2 text-sm font-semibold text-forum-blue hover:underline">
-                  <Download className="h-4 w-4" aria-hidden /> {t.about.posterDownload}
-                </a>
-              </figcaption>
-            </figure>
           </div>
         </section>
 
