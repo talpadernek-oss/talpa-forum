@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { CheckCircle2, Loader2, AlertCircle, BadgeCheck, Info } from 'lucide-react';
 import { DAYS, JOB_TITLES, JOB_TITLES_EN, OTHER_TITLE, type DayValue } from '@/lib/constants';
 import type { Lang } from '@/lib/messages';
-import DayOffNotice from './DayOffNotice';
 
 /** Masked values from /api/member/verify; the server fills in the real ones on submit. */
 type Member = { name: string; email: string; phone: string; organization: string };
@@ -213,8 +212,6 @@ export default function RegistrationForm({ lang = 'tr' }: { lang?: Lang }) {
         <CheckCircle2 className="h-14 w-14 text-emerald-500" aria-hidden />
         <h3 className="mt-4 text-2xl font-extrabold text-forum-navy">{t.doneTitle}</h3>
         <p className="mt-3 max-w-md leading-relaxed text-slate-600">{t.doneText(doneName)}</p>
-        {/* "Boş Gün" (day off) is a Turkish airline arrangement, so the notice is Turkish-only. */}
-        {lang === 'tr' && <DayOffNotice className="mt-6 w-full max-w-md" />}
         <button type="button" onClick={() => setDoneName(null)} className="btn-ghost mt-8">
           {t.registerAnother}
         </button>

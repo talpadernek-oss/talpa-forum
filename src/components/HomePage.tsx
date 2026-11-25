@@ -14,7 +14,6 @@ import {
   Languages
 } from 'lucide-react';
 import RegistrationForm from '@/components/RegistrationForm';
-import DayOffNotice from '@/components/DayOffNotice';
 import { EVENT, HOTEL, siteUrl } from '@/lib/constants';
 import { HOME_COPY } from '@/content/home';
 import type { Lang } from '@/lib/messages';
@@ -48,7 +47,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/80 xl:flex">
             <a href="#forum" className="hover:text-white">{t.nav.forum}</a>
             <a href="#program" className="hover:text-white">{t.nav.program}</a>
-            <a href="#katilim" className="hover:text-white">{t.nav.attend}</a>
             <a href="#mekan" className="hover:text-white">{t.nav.venue}</a>
             <a href="#ulasim" className="hover:text-white">{t.nav.travel}</a>
             <a href="#konaklama" className="hover:text-white">{t.nav.stay}</a>
@@ -189,29 +187,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
           </div>
         </section>
 
-        {/* ---------- Who should attend ---------- */}
-        <section id="katilim" className="bg-white py-20 sm:py-24">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.16em] text-forum-ember">{t.attend.tag}</p>
-                <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">{t.attend.heading}</h2>
-                <div className="mt-5 space-y-4 text-[17px] leading-relaxed text-slate-600">
-                  {t.attend.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
-                </div>
-              </div>
-              <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {t.attend.units.map(u => (
-                  <li key={u} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 font-semibold text-forum-navy">
-                    <span className="h-2 w-2 rounded-full bg-forum-blue" />
-                    {u}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
         {/* ---------- Date & venue ---------- */}
         <section id="mekan" className="relative overflow-hidden bg-forum-navy py-16 text-white">
           <div className="dot-grid absolute inset-0 opacity-20" />
@@ -244,7 +219,6 @@ export default function HomePage({ lang }: { lang: Lang }) {
               <h2 className="mt-2 text-3xl font-extrabold leading-tight text-forum-navy sm:text-4xl">{t.register.heading}</h2>
               <p className="mt-5 text-[17px] leading-relaxed text-slate-600">{t.register.lead}</p>
               <p className="mt-4 text-[15px] leading-relaxed text-slate-500">{t.register.note}</p>
-              {t.register.dayOffNotice && <DayOffNotice className="mt-8" />}
             </div>
             <RegistrationForm lang={lang} />
           </div>

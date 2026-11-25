@@ -7,7 +7,7 @@ export interface HomeCopy {
   switchTo: { href: string; label: string; aria: string };
   logoSub: string;
   topAria: string;
-  nav: { forum: string; program: string; attend: string; venue: string; travel: string; stay: string; register: string };
+  nav: { forum: string; program: string; venue: string; travel: string; stay: string; register: string };
   hero: {
     edition: string;
     title: string;
@@ -28,14 +28,13 @@ export interface HomeCopy {
     /** Hint under the images: they open full size in a new tab. */
     openHint: string;
   };
-  attend: { tag: string; heading: string; paragraphs: string[]; units: string[] };
   venue: {
     date: { label: string; value: string; sub: string };
     time: { label: string; value: string; sub: string };
     place: { label: string; value: string; sub: string };
     mapLink: string;
   };
-  register: { tag: string; heading: string; lead: string; note: string; dayOffNotice: boolean };
+  register: { tag: string; heading: string; lead: string; note: string };
   travel: {
     tag: string;
     heading: string;
@@ -65,7 +64,7 @@ const tr: HomeCopy = {
   switchTo: { href: '/en', label: 'EN', aria: 'Switch to English' },
   logoSub: 'Uçuş Emniyet Forumu',
   topAria: 'Sayfa başı',
-  nav: { forum: 'Forum', program: 'Program', attend: 'Kimler Katılmalı', venue: 'Tarih & Mekân', travel: 'Ulaşım', stay: 'Konaklama', register: 'Kayıt Ol' },
+  nav: { forum: 'Forum', program: 'Program', venue: 'Tarih & Mekân', travel: 'Ulaşım', stay: 'Konaklama', register: 'Kayıt Ol' },
   hero: {
     edition: '2. TALPA',
     title: 'Uçuş Emniyet Forumu',
@@ -73,7 +72,7 @@ const tr: HomeCopy = {
     tagline: 'TALPA Uçuş Emniyet Forumu’na katılımınızı saygılarımızla arz ederiz.',
     month: 'ARALIK',
     venue: 'SHGM Türk Sivil Havacılık Akademisi, İstanbul',
-    start: 'Başlangıç 09.00',
+    start: 'Başlangıç 08.45',
     cta: 'Hemen Kayıt Ol',
     ctaProgram: 'Programı İncele'
   },
@@ -89,7 +88,7 @@ const tr: HomeCopy = {
       'İki gün sürecek etkinliğimizde, uçuş emniyetinin yalnızca teknik ve operasyonel boyutları değil; insan faktörü, kurumsal kültür, psikolojik esenlik ve sürdürülebilir emniyet yönetimi açısından taşıdığı önem de değerlendirilecektir.'
     ],
     quote: '“Uçuş emniyeti, yalnızca kurallara uyumla değil; güven, ortak sorumluluk, bilimsel yaklaşım ve sürekli öğrenmeyle güçlenir.”',
-    posterAlt: '2. TALPA Uçuş Emniyet Forumu afişi – 1-2 Aralık 2026, SHGM Türk Sivil Havacılık Akademisi, 09.00',
+    posterAlt: '2. TALPA Uçuş Emniyet Forumu afişi – 1-2 Aralık 2026, SHGM Türk Sivil Havacılık Akademisi',
     posterDownload: 'Afişi indir'
   },
   program: {
@@ -101,18 +100,9 @@ const tr: HomeCopy = {
     ],
     openHint: 'Büyük boyutta görüntülemek için programa tıklayınız.'
   },
-  attend: {
-    tag: 'Kimler katılmalı',
-    heading: 'Kurumunuzun ilgili tüm birimlerini bekliyoruz',
-    paragraphs: [
-      'Bu anlayış doğrultusunda, kurumunuzun uçuş işletme, uçuş emniyeti, insan kaynakları, eğitim, ekip planlama, kalite, risk yönetimi ve ilgili diğer birimlerinden temsilcilerin forumumuza katılımını özellikle önemsiyoruz.',
-      'Bilgi ve deneyimlerin paylaşılacağı, sektörümüzün geleceğine yönelik ortak çözüm önerilerinin geliştirileceği bu önemli buluşmada sizleri aramızda görmekten memnuniyet duyacağız.'
-    ],
-    units: ['Uçuş İşletme', 'Uçuş Emniyeti', 'İnsan Kaynakları', 'Eğitim', 'Ekip Planlama', 'Kalite', 'Risk Yönetimi', 'İlgili diğer birimler']
-  },
   venue: {
     date: { label: 'Tarih', value: '1–2 Aralık 2026', sub: 'Salı – Çarşamba' },
-    time: { label: 'Saat', value: '09.00', sub: 'Kayıt ve karşılama ile başlar' },
+    time: { label: 'Saat', value: '08.45', sub: 'Kayıt ve karşılama ile başlar' },
     place: { label: 'Mekân', value: 'SHGM Türk Sivil Havacılık Akademisi', sub: 'İstanbul' },
     mapLink: 'Konum için tıklayınız'
   },
@@ -120,8 +110,7 @@ const tr: HomeCopy = {
     tag: 'Kayıt',
     heading: 'Katılım başvurusu',
     lead: 'Kaydınız alındıktan sonra etkinlikle ilgili bilgilendirmeler e-posta adresinize iletilecektir.',
-    note: 'Kurumunuzdan birden fazla kişi katılacaksa her katılımcının ayrı kayıt yapması gerekir.',
-    dayOffNotice: true
+    note: 'Kurumunuzdan birden fazla kişi katılacaksa her katılımcının ayrı kayıt yapması gerekir.'
   },
   travel: {
     tag: 'Ulaşım',
@@ -155,7 +144,7 @@ const en: HomeCopy = {
   switchTo: { href: '/', label: 'TR', aria: 'Türkçe sayfaya geç' },
   logoSub: 'Flight Safety Forum',
   topAria: 'Back to top',
-  nav: { forum: 'Forum', program: 'Programme', attend: 'Who Should Attend', venue: 'Date & Venue', travel: 'Getting There', stay: 'Accommodation', register: 'Register' },
+  nav: { forum: 'Forum', program: 'Programme', venue: 'Date & Venue', travel: 'Getting There', stay: 'Accommodation', register: 'Register' },
   hero: {
     edition: '2nd TALPA',
     title: 'Flight Safety Forum',
@@ -163,7 +152,7 @@ const en: HomeCopy = {
     tagline: 'We cordially invite you to attend the TALPA Flight Safety Forum.',
     month: 'DECEMBER',
     venue: 'Turkish DGCA (SHGM) Civil Aviation Academy, Istanbul',
-    start: 'Starts at 09:00',
+    start: 'Starts at 08:45',
     cta: 'Register Now',
     ctaProgram: 'View Programme'
   },
@@ -179,7 +168,7 @@ const en: HomeCopy = {
       'Over the two days, the forum will examine not only the technical and operational dimensions of flight safety, but also its significance for human factors, organisational culture, psychological well-being and sustainable safety management.'
     ],
     quote: '“Flight safety is strengthened not only by compliance with rules, but by trust, shared responsibility, a scientific approach and continuous learning.”',
-    posterAlt: '2nd TALPA Flight Safety Forum poster – 1-2 December 2026, Turkish DGCA (SHGM) Civil Aviation Academy, 09:00',
+    posterAlt: '2nd TALPA Flight Safety Forum poster – 1-2 December 2026, Turkish DGCA (SHGM) Civil Aviation Academy',
     posterDownload: 'Download poster'
   },
   program: {
@@ -191,18 +180,9 @@ const en: HomeCopy = {
     ],
     openHint: 'Click on a page to view it full size.'
   },
-  attend: {
-    tag: 'Who should attend',
-    heading: 'We welcome all relevant departments of your organisation',
-    paragraphs: [
-      'In this spirit, we particularly value the participation of representatives from your flight operations, flight safety, human resources, training, crew planning, quality, risk management and other relevant departments.',
-      'We look forward to welcoming you to this important gathering, where knowledge and experience will be shared and joint solutions for the future of our industry will be developed.'
-    ],
-    units: ['Flight Operations', 'Flight Safety', 'Human Resources', 'Training', 'Crew Planning', 'Quality', 'Risk Management', 'Other relevant departments']
-  },
   venue: {
     date: { label: 'Date', value: '1–2 December 2026', sub: 'Tuesday – Wednesday' },
-    time: { label: 'Time', value: '09:00', sub: 'Opens with registration and welcome' },
+    time: { label: 'Time', value: '08:45', sub: 'Opens with registration and welcome' },
     place: { label: 'Venue', value: 'Turkish DGCA (SHGM) Civil Aviation Academy', sub: 'Istanbul' },
     mapLink: 'Click for location'
   },
@@ -210,8 +190,7 @@ const en: HomeCopy = {
     tag: 'Registration',
     heading: 'Register to attend',
     lead: 'Once your registration has been received, event information will be sent to your e-mail address.',
-    note: 'If more than one person from your organisation will attend, each participant must register separately.',
-    dayOffNotice: false
+    note: 'If more than one person from your organisation will attend, each participant must register separately.'
   },
   travel: {
     tag: 'Getting there',
