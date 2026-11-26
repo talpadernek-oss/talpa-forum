@@ -1,4 +1,4 @@
-import { DAYS, ROLES, type DayValue, type RoleValue } from './constants';
+import { DAYS, JOB_SEEKER_TITLE, ROLES, type DayValue, type RoleValue } from './constants';
 import { msg, type Lang, type MessageKey } from './messages';
 
 export interface RegistrationFields {
@@ -60,7 +60,7 @@ export function validateRegistration(input: any, mode: 'public' | 'admin', lang:
   }
   if (mode === 'public') {
     if (!jobTitle) return fail('jobTitleRequired');
-    if (!organization) return fail('organizationRequired');
+    if (!organization && jobTitle !== JOB_SEEKER_TITLE) return fail('organizationRequired');
     if (!days.length) return fail('daysRequired');
   }
 

@@ -60,6 +60,7 @@ export const roleLabel = (v: string) => ROLES.find(r => r.value === v)?.label ??
 export const JOB_TITLES = [
   'Kaptan Pilot',
   'First Officer',
+  'Öğrenci Pilot',
   'Kabin Amiri',
   'Kabin Memuru',
   'Uçuş Mühendisi',
@@ -72,14 +73,18 @@ export const JOB_TITLES = [
   'İnsan Kaynakları',
   'Yönetici',
   'Akademisyen / Öğrenci',
+  'İş Arıyorum',
   'Diğer'
 ] as const;
 export const OTHER_TITLE = 'Diğer';
+/** Job seekers have no employer to name, so the organisation field is optional only for them. */
+export const JOB_SEEKER_TITLE = 'İş Arıyorum';
 
 /** English labels for the English form; the stored value stays Turkish so the admin list is uniform. */
 export const JOB_TITLES_EN: Record<(typeof JOB_TITLES)[number], string> = {
   'Kaptan Pilot': 'Captain',
   'First Officer': 'First Officer',
+  'Öğrenci Pilot': 'Student Pilot',
   'Kabin Amiri': 'Cabin Chief / Purser',
   'Kabin Memuru': 'Cabin Crew Member',
   'Uçuş Mühendisi': 'Flight Engineer',
@@ -92,6 +97,7 @@ export const JOB_TITLES_EN: Record<(typeof JOB_TITLES)[number], string> = {
   'İnsan Kaynakları': 'Human Resources',
   'Yönetici': 'Manager / Executive',
   'Akademisyen / Öğrenci': 'Academic / Student',
+  'İş Arıyorum': 'Seeking Employment',
   'Diğer': 'Other'
 };
 

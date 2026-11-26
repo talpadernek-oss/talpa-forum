@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { CheckCircle2, Loader2, AlertCircle, BadgeCheck, Info } from 'lucide-react';
-import { DAYS, JOB_TITLES, JOB_TITLES_EN, OTHER_TITLE, type DayValue } from '@/lib/constants';
+import { DAYS, JOB_SEEKER_TITLE, JOB_TITLES, JOB_TITLES_EN, OTHER_TITLE, type DayValue } from '@/lib/constants';
 import type { Lang } from '@/lib/messages';
 
 /** Masked values from /api/member/verify; the server fills in the real ones on submit. */
@@ -34,6 +34,7 @@ const COPY = {
     jobTitle: 'İş Ünvanı',
     select: 'Seçiniz',
     organization: 'Çalıştığı Firma / Kurum',
+    optional: '(isteğe bağlı)',
     organizationPlaceholder: 'Havayolu, kurum veya üniversite',
     jobTitleOther: 'Ünvanınız',
     daysLegend: 'Katılacağınız gün(ler)',
@@ -79,6 +80,7 @@ const COPY = {
     jobTitle: 'Job title',
     select: 'Please select',
     organization: 'Company / Organisation',
+    optional: '(optional)',
     organizationPlaceholder: 'Airline, organisation or university',
     jobTitleOther: 'Your job title',
     daysLegend: 'Day(s) you will attend',
@@ -143,6 +145,8 @@ export default function RegistrationForm({ lang = 'tr' }: { lang?: Lang }) {
 
   const useOdooEmail = Boolean(member?.email) && !ownEmail;
   const useOdooPhone = Boolean(member?.phone) && !ownPhone;
+  // Same rule as the server (validation.ts): only job seekers may leave the organisation empty.
+  const orgOptional = form.jobTitle === JOB_SEEKER_TITLE;
 
   async function verifyMember() {
     resetMember();
@@ -326,8 +330,11 @@ export default function RegistrationForm({ lang = 'tr' }: { lang?: Lang }) {
             </select>
           </div>
           <div>
-            <label htmlFor="organization" className="field-label">{t.organization}</label>
-            <input id="organization" className="field-input" required autoComplete="organization" maxLength={160}
+            <label htmlFor="organization" className="field-label">
+              {t.organization}
+              {orgOptional && <span className="font-normal text-slate-500"> {t.optional}</span>}
+            </label>
+            <input id="organization" className="field-input" required={!orgOptional} autoComplete="organization" maxLength={160}
               placeholder={t.organizationPlaceholder} value={form.organization}
               onChange={e => set('organization', e.target.value)} />
           </div>
