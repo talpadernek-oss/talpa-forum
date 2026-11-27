@@ -94,8 +94,8 @@ const tr: HomeCopy = {
   speakers: {
     heading: 'Konuşmacılar',
     image: {
-      src: '/speakers-tr.jpg',
-      alt: 'Konuşmacılar: Kpt. Plt. Juan Carlos LOZANO (ECA Direktörü, bir önceki; IFALPA Başkan Yardımcısı, bir önceki), Prof. Dr. Murat EFE (Ankara Üniversitesi), Prof. Dr. Michael FELUX (Zürih Uygulamalı Bilimler Üniversitesi), Dr. Okuary OSECHAS (Zürih Uygulamalı Bilimler Üniversitesi), Kpt. Plt. Melih YARARCAN (Pegasus Hava Yolları), Psk. Simay LEBLEBİCİ (TALPA MDA Program Psikoloğu), Kpt. Plt. Muharrem GÜNDOĞAN (TALPA MDA Program Koordinatörü), Kpt. Plt. Bülent ATAŞ (Türk Hava Yolları), Nedim YARDIMCI (Türk Hava Yolları), Buğra IŞIK (Türk Hava Yolları), Kpt. Plt. Muhammet E. AKIN (SunExpress), Özcan ÇETİN (SunExpress). Moderatör: Plt. Merve BAŞARAN (ECA Uçuş Standartları ve Operasyon Çalışma Grubu Başkanı).'
+      src: '/speakers-tr-r2.jpg',
+      alt: 'Konuşmacılar: Kpt. Plt. Juan Carlos LOZANO (ECA Direktörü, bir önceki; IFALPA Başkan Yardımcısı, bir önceki), Prof. Dr. Murat EFE (Ankara Üniversitesi), Prof. Dr. Michael FELUX (Zürih Uygulamalı Bilimler Üniversitesi), Dr. Okuary OSECHAS (Zürih Uygulamalı Bilimler Üniversitesi), Özcan ÇETİN (SunExpress), Kpt. Plt. Melih YARARCAN (Pegasus Hava Yolları), Sevcihan AYGÜN (Hava Trafik Kontrolörü, DHMİ), Kpt. Plt. Muharrem GÜNDOĞAN (TALPA MDA Program Koordinatörü), Psk. Simay LEBLEBİCİ (TALPA MDA Program Psikoloğu), Kpt. Plt. Bülent ATAŞ (Türk Hava Yolları), Erhan KILIÇGİL (Hava Trafik Kontrolörü, DHMİ), Kpt. Plt. Murat CİNAN (DHMİ Uçuş Kontrol Pilotu), Nedim YARDIMCI (Türk Hava Yolları), Buğra IŞIK (Türk Hava Yolları), Kpt. Plt. Muhammet E. AKIN (SunExpress). Moderatör: Plt. Merve BAŞARAN (ECA Uçuş Standartları ve Operasyon Çalışma Grubu Başkanı).'
     },
     openHint: 'Büyük boyutta görüntülemek için görsele tıklayınız.'
   },
@@ -103,8 +103,8 @@ const tr: HomeCopy = {
     tag: 'Program',
     heading: '1-2 Aralık TALPA Uçuş Emniyet Forum Programı',
     pages: [
-      { src: '/program-tr-1.jpg', alt: '1. Gün programı – 1 Aralık 2026, Salı' },
-      { src: '/program-tr-2-r2.jpg', alt: '2. Gün programı – 2 Aralık 2026, Çarşamba' }
+      { src: '/program-tr-1-r3.jpg', alt: '1. Gün programı – 1 Aralık 2026, Salı' },
+      { src: '/program-tr-2-r3.jpg', alt: '2. Gün programı – 2 Aralık 2026, Çarşamba' }
     ],
     openHint: 'Büyük boyutta görüntülemek için programa tıklayınız.'
   },
@@ -180,8 +180,8 @@ const en: HomeCopy = {
   speakers: {
     heading: 'Speakers',
     image: {
-      src: '/speakers-en.jpg',
-      alt: 'Speakers: Capt. Juan Carlos LOZANO (Former ECA Tech. Director, Former IFALPA Deputy President), Prof. Dr. Murat EFE (Ankara University), Prof. Dr. Michael FELUX (Zurich University of Applied Sciences), Dr. Okuary OSECHAS (Zurich University of Applied Sciences), Capt. Melih YARARCAN (Pegasus Airlines), Psych. Simay LEBLEBİCİ (TALPA MDA Program Psychologist), Capt. Muharrem GÜNDOĞAN (TALPA MDA Program Supervisor), Capt. Bülent ATAŞ (Turkish Airlines), Nedim YARDIMCI (Turkish Airlines), Buğra IŞIK (Turkish Airlines), Capt. Muhammet E. AKIN (SunExpress), Özcan ÇETİN (SunExpress). Moderator: Plt. Merve BAŞARAN (ECA Flight Standards and Operations Working Group Chair).'
+      src: '/speakers-en-r2.jpg',
+      alt: 'Speakers: Capt. Juan Carlos LOZANO (Former ECA Tech. Director, Former IFALPA Deputy President), Prof. Dr. Murat EFE (Ankara University), Prof. Dr. Michael FELUX (Zurich University of Applied Sciences), Dr. Okuary OSECHAS (Zurich University of Applied Sciences), Özcan ÇETİN (SunExpress), Capt. Melih YARARCAN (Pegasus Airlines), Sevcihan AYGÜN (Air Traffic Controller, SAA), Capt. Muharrem GÜNDOĞAN (TALPA MDA Program Supervisor), Psych. Simay LEBLEBİCİ (TALPA MDA Program Psychologist), Capt. Bülent ATAŞ (Turkish Airlines), Erhan KILIÇGİL (Air Traffic Controller, SAA), Capt. Murat CİNAN (SAA Flight Inspection Pilot), Nedim YARDIMCI (Turkish Airlines), Buğra IŞIK (Turkish Airlines), Capt. Muhammet E. AKIN (SunExpress). Moderator: Plt. Merve BAŞARAN (ECA Flight Standards and Operations Working Group Chair).'
     },
     openHint: 'Click on the image to view it full size.'
   },
@@ -189,8 +189,8 @@ const en: HomeCopy = {
     tag: 'Programme',
     heading: 'TALPA Flight Safety Forum Programme, 1-2 December',
     pages: [
-      { src: '/program-en-1.jpg', alt: 'Day 1 programme – Tuesday, 1 December 2026' },
-      { src: '/program-en-2-r2.jpg', alt: 'Day 2 programme – Wednesday, 2 December 2026' }
+      { src: '/program-en-1-r3.jpg', alt: 'Day 1 programme – Tuesday, 1 December 2026' },
+      { src: '/program-en-2-r3.jpg', alt: 'Day 2 programme – Wednesday, 2 December 2026' }
     ],
     openHint: 'Click on a page to view it full size.'
   },
