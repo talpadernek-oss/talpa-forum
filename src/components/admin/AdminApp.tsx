@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
   Search,
@@ -14,7 +14,10 @@ import {
   Users,
   UserCheck,
   X,
-  AlertCircle
+  AlertCircle,
+  Send,
+  MailCheck,
+  Square
 } from 'lucide-react';
 import { DAYS, JOB_TITLES, ROLES, roleLabel, type Registration, type RoleValue, type DayValue } from '@/lib/constants';
 
@@ -44,6 +47,10 @@ export default function AdminApp() {
   const [query, setQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | RoleValue>('all');
   const [editing, setEditing] = useState<Registration | 'new' | null>(null);
+  const [notice, setNotice] = useState('');
+  const [sendingId, setSendingId] = useState<string | null>(null);
+  const [bulk, setBulk] = useState<{ done: number; total: number; failed: string[] } | null>(null);
+  const stopBulk = useRef(false);
 
   const load = useCallback(async () => {
     setRefreshing(true);
@@ -81,6 +88,66 @@ export default function AdminApp() {
     setItems(list => list.filter(x => x.id !== r.id));
   }
 
+  /** Returns '' on success, 'auth' when the session expired, otherwise the error message. */
+  async function sendApproval(r: Registration): Promise<string> {
+    const res = await api<{ registration: Registration }>(`/api/admin/registrations/${r.id}/approval`, { method: 'POST' });
+    if (res.status === 401) {
+      setState('login');
+      return 'auth';
+    }
+    if (!res.success) return res.error || 'Mail gönderilemedi.';
+    upsertLocal(res.registration);
+    return '';
+  }
+
+  async function sendOne(r: Registration) {
+    const again = r.approvalSentAt
+      ? `\n\nBu kişiye ${fmtDate(r.approvalSentAt)} tarihinde onay maili gönderilmişti; tekrar gönderilecek.`
+      : '';
+    if (!confirm(`${r.fullName} (${r.email}) adresine katılım onay maili gönderilsin mi?${again}`)) return;
+    setSendingId(r.id);
+    setError('');
+    setNotice('');
+    const err = await sendApproval(r);
+    setSendingId(null);
+    if (err === 'auth') return;
+    if (err) setError(err);
+    else setNotice(`Onay maili gönderildi: ${r.fullName}`);
+  }
+
+  async function sendBulk(list: Registration[]) {
+    if (!list.length) return;
+    const minutes = Math.max(1, Math.ceil((list.length * 2.2) / 60));
+    if (!confirm(`Onay maili henüz gönderilmemiş ${list.length} kişiye katılım onay maili gönderilsin mi?\n\nMailler sırayla gönderilir (yaklaşık ${minutes} dk). Bu sırada sayfayı kapatmayın.`)) return;
+    stopBulk.current = false;
+    setError('');
+    setNotice('');
+    const failed: string[] = [];
+    let done = 0;
+    setBulk({ done, total: list.length, failed });
+    for (const r of list) {
+      if (stopBulk.current) break;
+      const err = await sendApproval(r);
+      if (err === 'auth') {
+        setBulk(null);
+        return;
+      }
+      done++;
+      if (err) failed.push(`${r.fullName}: ${err}`);
+      setBulk({ done, total: list.length, failed: [...failed] });
+      // Office 365 allows about 30 messages per minute from one mailbox.
+      if (done < list.length && !stopBulk.current) await new Promise(res => setTimeout(res, 2200));
+    }
+    setBulk(null);
+    if (failed.length) setError(`${failed.length} mail gönderilemedi: ${failed.join(' · ')}`);
+    const sent = done - failed.length;
+    setNotice(
+      stopBulk.current
+        ? `Gönderim durduruldu: ${sent} mail gönderildi, ${list.length - done} kişi bekliyor.`
+        : `Toplu gönderim tamamlandı: ${sent} / ${list.length} mail gönderildi.`
+    );
+  }
+
   async function logout() {
     await api('/api/admin/logout', { method: 'POST' });
     setItems([]);
@@ -100,13 +167,16 @@ export default function AdminApp() {
   }, [items, query, roleFilter]);
 
   const counts = useMemo(() => {
-    const c: Record<string, number> = { all: items.length, checkedIn: 0 };
+    const c: Record<string, number> = { all: items.length, checkedIn: 0, approved: 0 };
     for (const r of items) {
       c[r.role] = (c[r.role] || 0) + 1;
       if (r.checkedIn) c.checkedIn++;
+      if (r.approvalSentAt) c.approved++;
     }
     return c;
   }, [items]);
+
+  const pendingApproval = filtered.filter(r => r.email && !r.approvalSentAt);
 
   if (state === 'loading')
     return (
@@ -136,7 +206,7 @@ export default function AdminApp() {
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         {/* Stats – also act as role filters */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           <StatButton active={roleFilter === 'all'} onClick={() => setRoleFilter('all')} label="Toplam" value={counts.all} icon={Users} />
           {ROLES.map(r => (
             <StatButton key={r.value} active={roleFilter === r.value} onClick={() => setRoleFilter(r.value)} label={r.label} value={counts[r.value] || 0} />
@@ -146,6 +216,12 @@ export default function AdminApp() {
               <UserCheck className="h-3.5 w-3.5" aria-hidden /> Giriş yaptı
             </p>
             <p className="mt-1 text-2xl font-extrabold text-emerald-600">{counts.checkedIn}</p>
+          </div>
+          <div className="rounded-xl bg-white p-4 ring-1 ring-slate-200">
+            <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <MailCheck className="h-3.5 w-3.5" aria-hidden /> Onay maili
+            </p>
+            <p className="mt-1 text-2xl font-extrabold text-sky-700">{counts.approved}</p>
           </div>
         </div>
 
@@ -158,6 +234,14 @@ export default function AdminApp() {
             <button onClick={() => setEditing('new')} className="btn-navy">
               <Plus className="h-4 w-4" aria-hidden /> Kişi Ekle
             </button>
+            <button
+              onClick={() => sendBulk(pendingApproval)}
+              className="btn-ghost"
+              disabled={!!bulk || !pendingApproval.length}
+              title="Listede görünen ve henüz onay maili gönderilmemiş kişilere gönderir"
+            >
+              <Send className="h-4 w-4" aria-hidden /> Toplu Onay Maili ({pendingApproval.length})
+            </button>
             <button onClick={() => exportCsv(filtered)} className="btn-ghost" disabled={!filtered.length}>
               <Download className="h-4 w-4" aria-hidden /> Excel (CSV)
             </button>
@@ -166,6 +250,30 @@ export default function AdminApp() {
             </button>
           </div>
         </div>
+
+        {bulk && (
+          <div className="mt-4 rounded-xl bg-sky-50 px-4 py-3 text-sm text-sky-900 ring-1 ring-sky-200">
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex items-center gap-2 font-medium">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Onay mailleri gönderiliyor: {bulk.done} / {bulk.total}
+                {bulk.failed.length > 0 && <span className="text-rose-700">({bulk.failed.length} hata)</span>}
+              </span>
+              <button onClick={() => (stopBulk.current = true)} className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold hover:bg-sky-100">
+                <Square className="h-3 w-3" aria-hidden /> Durdur
+              </button>
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-sky-100">
+              <div className="h-full bg-sky-600 transition-all" style={{ width: `${(bulk.done / bulk.total) * 100}%` }} />
+            </div>
+          </div>
+        )}
+
+        {notice && (
+          <p role="status" className="mt-4 flex items-center justify-between gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
+            <span className="flex items-center gap-2"><MailCheck className="h-4 w-4" aria-hidden /> {notice}</span>
+            <button onClick={() => setNotice('')} aria-label="Kapat"><X className="h-4 w-4" /></button>
+          </p>
+        )}
 
         {error && (
           <p role="alert" className="mt-4 flex items-center justify-between gap-2 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 ring-1 ring-rose-200">
@@ -209,6 +317,11 @@ export default function AdminApp() {
                     <td className="px-4 py-3">
                       {r.email ? <a href={`mailto:${r.email}`} className="block text-forum-blue hover:underline">{r.email}</a> : <span className="text-slate-400">—</span>}
                       {r.phone && <a href={`tel:${r.phone}`} className="block text-slate-600">{r.phone}</a>}
+                      {r.approvalSentAt && (
+                        <span title={`Onay maili: ${fmtDate(r.approvalSentAt)}`} className="mt-1 inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-emerald-700 ring-1 ring-emerald-200">
+                          <MailCheck className="h-3 w-3" aria-hidden /> Onay maili gitti
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <p className="text-slate-800">{r.jobTitle || '—'}</p>
@@ -236,6 +349,15 @@ export default function AdminApp() {
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
+                      <button
+                        onClick={() => sendOne(r)}
+                        disabled={!r.email || !!bulk || sendingId === r.id}
+                        className={`rounded-lg p-2 hover:bg-sky-50 hover:text-sky-700 disabled:opacity-40 ${r.approvalSentAt ? 'text-emerald-600' : 'text-slate-500'}`}
+                        aria-label={r.approvalSentAt ? 'Onay mailini tekrar gönder' : 'Onay maili gönder'}
+                        title={!r.email ? 'E-posta adresi yok' : r.approvalSentAt ? `Onay maili gönderildi (${fmtDate(r.approvalSentAt)}) – tekrar gönder` : 'Onay maili gönder'}
+                      >
+                        {sendingId === r.id ? <Loader2 className="h-4 w-4 animate-spin" /> : r.approvalSentAt ? <MailCheck className="h-4 w-4" /> : <Send className="h-4 w-4" />}
+                      </button>
                       <button onClick={() => setEditing(r)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-forum-navy" aria-label="Düzenle">
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -462,7 +584,7 @@ function exportCsv(rows: Registration[]) {
   const esc = (v: string) => `"${(v ?? '').replace(/^[=+\-@\t\r]/, "'$&").replace(/"/g, '""')}"`;
   // ="0532…" keeps the leading 0 / + that Excel would otherwise drop (phones are digits and + only).
   const phone = (v: string) => (v ? `="${v}"` : '""');
-  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Not', 'Kaynak', 'Dil', 'Kayıt Tarihi'];
+  const header = ['Ad Soyad', 'E-posta', 'Telefon', 'İş Ünvanı', 'Firma / Kurum', 'TALPA Üyesi', 'Rol', '1 Aralık', '2 Aralık', 'Giriş Yaptı', 'Onay Maili', 'Not', 'Kaynak', 'Dil', 'Kayıt Tarihi'];
   const lines = rows.map(r =>
     [
       esc(r.fullName),
@@ -476,6 +598,7 @@ function exportCsv(rows: Registration[]) {
         r.days.includes('1') ? 'Evet' : 'Hayır',
         r.days.includes('2') ? 'Evet' : 'Hayır',
         r.checkedIn ? 'Evet' : 'Hayır',
+        r.approvalSentAt ? fmtDate(r.approvalSentAt) : 'Hayır',
         r.notes,
         r.source === 'manual' ? 'Manuel' : 'Web formu',
         r.lang === 'en' ? 'İngilizce' : 'Türkçe',

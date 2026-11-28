@@ -117,6 +117,8 @@ export interface Registration {
   odooPartnerId?: number;
   /** Language of the page the web form was sent from (missing on older and manual entries = Turkish). */
   lang?: Lang;
+  /** Last time the "participation confirmed" e-mail was sent from the admin panel. */
+  approvalSentAt?: string;
   source: 'form' | 'manual';
   createdAt: string;
   updatedAt: string;

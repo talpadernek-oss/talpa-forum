@@ -90,6 +90,15 @@ export async function updateRegistration(id: string, fields: Partial<Registratio
   return next;
 }
 
+export async function markApprovalSent(id: string) {
+  const current = await getRegistration(id);
+  if (!current) return null;
+  const now = new Date().toISOString();
+  const next: Registration = { ...current, approvalSentAt: now, updatedAt: now };
+  await writeJson(regKey(id), next);
+  return next;
+}
+
 export async function deleteRegistration(id: string) {
   const current = await getRegistration(id);
   if (!current) return false;
